@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ACPowered - About</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.cart {
+  transition: transform 0.2s, filter 0.2s;
+}
+
+.cart:hover {
+  transform: scale(1.2);
+  filter: brightness(1.2);
+}
+
+.nav-container .logo img {
+  max-height: 60px;
+  width: auto;
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav-container">
+    <div class="logo">
+      <img src="acpowered.png" alt="ACPowered Logo">
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="store.html">Store</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="right-header">
+      <div class="cart">
+        <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
+      </div>
+      <input type="text" class="search-pc" placeholder="Search games...">
+    </div>
+    <div class="hamburger" onclick="document.querySelector('.mobile-query').classList.toggle('active')">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <div class="mobile-query">
+    <a href="index.html">Home</a>
+    <a href="store.html">Store</a>
+    <a href="about.html">About</a>
+    <input type="text" placeholder="Search games...">
+  </div>
+</header>
+
+<section class="section" style="margin-top:80px;">
+<h2>About AC Store</h2>
+<p>ACPowered (Alternate Current Store) is a digital store dedicated to delivering the best video game titles to gamers worldwide.</p>
+<p>Founded in 209, AC Store focuses on a curated library including Persona, Yakuza, Shin Megami Tensei, and more.</p>
+<p>We are committed to fair pricing and seamless experiences</p>
+<p><strong>“Beneficial for Developers, Publishers and Users like alternate current”</strong></p>
+</section>
+
+<footer>
+<p>©2025 ACPowered - Alternate Current Store</p>
+</footer>
+</body>
+</html>

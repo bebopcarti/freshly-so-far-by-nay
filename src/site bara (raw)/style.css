@@ -1,0 +1,330 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  color: #111;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/*Header*/
+header {
+  background-color: #c8102e;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.nav-links a {
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #000;
+}
+
+.right-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-pc {
+  padding: 0.3rem 0.5rem;
+}
+
+.cart img {
+  width: 25px;
+  height: 25px;
+}
+
+/*Responsive Menu*/
+.hamburger,
+.mobile-query {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .hamburger div {
+    width: 25px;
+    height: 3px;
+    background: #fff;
+  }
+
+  .nav-links,
+  .search-pc {
+    display: none;
+  }
+
+  .mobile-query {
+    display: none;
+    flex-direction: column;
+    background: #c8102e;
+    padding: 1rem;
+  }
+
+  .mobile-query.active {
+    display: flex;
+  }
+
+  .mobile-query a,
+  .mobile-query input {
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  .cart {
+    order: 2;
+  }
+}
+
+.hero {
+  margin-top: 70px;
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  overflow: hidden;
+}
+
+.hero-slide {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 2rem;
+  transition: opacity 1s;
+}
+
+.hero-slide h2 {
+  font-size: 2rem;
+  color: #fff;
+  background: rgba(0,0,0,0.5);
+  padding: 0.5rem 1rem;
+  transition: transform 0.3s;
+}
+
+.hero-slide h2:hover {
+  transform: scale(1.1);
+}
+
+.section {
+  padding: 3rem 2rem;
+}
+
+.section h2 {
+  margin-bottom: 1rem;
+  color: #c8102e;
+}
+
+/*Game Cards*/
+.game-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  justify-content: center;
+  scroll-snap-type: x mandatory;
+}
+
+.game-card {
+  flex: 0 0 180px;
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.game-card img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+
+.game-card h3 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.price {
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 0.5rem;
+}
+
+.price .original {
+  text-decoration: line-through;
+  color: #888;
+  margin-right: 5px;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.category {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.category img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(4px);
+  transform: scale(1.1);
+}
+
+.category span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 0 5px #000;
+}
+
+/*Store Page*/
+.store-container {
+  display: flex;
+  gap: 2rem;
+  margin-top: 80px;
+  padding: 2rem;
+}
+
+.sidebar {
+  width: 250px;
+}
+
+.sidebar h3 {
+  color: #c8102e;
+  margin-bottom: 1rem;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.tabs {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid #c8102e;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tab:hover {
+  background: #c8102e;
+  color: #fff;
+}
+
+/*Footer*/
+footer {
+  background: #111;
+  color: #fff;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+/*Scrollbar*/
+.game-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.game-grid::-webkit-scrollbar-thumb {
+  background: #c8102e;
+  border-radius: 4px;
+}
+
+.game-grid::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+.css-slider-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  display: flex;
+  gap: 0;
+}
+
+.css-slider {
+  display: flex;
+  width: 100%;
+}
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: 60vh;
+  object-fit: cover;
+  display: block;
+}
