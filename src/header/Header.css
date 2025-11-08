@@ -1,0 +1,50 @@
+header {
+  background-color: #c8102e;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.nav-links a {
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #000;
+}
+
+.right-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-pc {
+  padding: 0.3rem 0.5rem;
+}
+
+.cart img {
+  width: 25px;
+  height: 25px;
+}
