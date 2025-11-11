@@ -3,7 +3,7 @@ import './Header.css';
 
 function Header() {
     return (
-        <header>
+      <header>
         <div class="nav-container">
           <div class="logo">
             <img src={logo} alt="ACPowered Logo"/>
