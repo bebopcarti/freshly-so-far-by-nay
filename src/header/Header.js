@@ -9,9 +9,9 @@ function Header() {
             <img src={logo} alt="ACPowered Logo"/>
           </div>
           <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="store.html">Store</a>
-            <a href="about.html">About</a>
+            <a href="/">Home</a>
+            <a href="store">Store</a>
+            <a href="about">About</a>
           </nav>
           <div class="right-header">
             <div class="cart">
@@ -26,9 +26,9 @@ function Header() {
           </div>
         </div>
         <div class="mobile-query">
-          <a href="index.html">Home</a>
-          <a href="store.html">Store</a>
-          <a href="about.html">About</a>
+          <a href="/">Home</a>
+          <a href="store">Store</a>
+          <a href="about">About</a>
           <input type="text" placeholder="Search games..."/>
         </div>
       </header>
