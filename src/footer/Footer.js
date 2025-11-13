@@ -3,7 +3,7 @@ import './Footer.css';
 function Footer() {
     return (
         <footer>
-            <p>©2025 ACPowered - Alternate Current Store</p>
+            <p>©2025 Freshly - Delivery of Fresh Food</p>
         </footer>
     )
 }
