@@ -36,3 +36,52 @@
     height:112px;
     object-fit: cover;
 }
+
+/*Store Page*/
+.store-container {
+  display: flex;
+  gap: 2rem;
+  margin-top: 80px;
+  padding: 2rem;
+}
+
+.sidebar {
+  width: 250px;
+}
+
+.sidebar h3 {
+  color: #c8102e;
+  margin-bottom: 1rem;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.tabs {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid #c8102e;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tab:hover {
+  background: #c8102e;
+  color: #fff;
+}
