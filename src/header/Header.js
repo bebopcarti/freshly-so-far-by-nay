@@ -17,7 +17,7 @@ function Header() {
             {/* <div class="cart">
               <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart"/>
             </div> */}
-            <input type="text" class="search-input" placeholder="Search games..."/>
+            <input type="text" class="search-input" placeholder="Search Ingredients..."/>
           </div>
 
           <div class="account-info">
