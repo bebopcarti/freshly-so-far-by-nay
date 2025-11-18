@@ -13,14 +13,8 @@ function Header() {
             </ul>
           </nav>
 
-          <div class="search">
-            {/* <div class="cart">
-              <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart"/>
-            </div> */}
-            <input type="text" class="search-input" placeholder="Search Ingredients..."/>
-          </div>
-
           <div class="account-info">
+            <a class="cart-button" href="/cart">Cart</a>
             <a class="login-button" href="/login">Login</a>
           </div>
           

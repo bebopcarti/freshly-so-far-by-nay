@@ -3,33 +3,35 @@ import './Store.css';
 function Store() {
     return (
         <>
+        <div className="store-page">
+
         <div className="store-container">
             
-            {/* ===== Sidebar ===== */}
+            {/* Sidebar */}
             <aside className="sidebar">
                 <h3>Search & Filter</h3>
-                <input className="search" type="text" placeholder="Search..." />
 
                 <h4>Price Range</h4>
                 <ul>
-                    <li><input type="radio" name="price" /> ≤ 10,000 IDR</li>
-                    <li><input type="radio" name="price" /> ≤ 20,000 IDR</li>
-                    <li><input type="radio" name="price" /> ≤ 50,000 IDR</li>
-                    <li><input type="radio" name="price" /> ≤ 100,000 IDR</li>
+                    <li><input type="radio" name="price" /> Under Rp 45.000</li>
+                    <li><input type="radio" name="price" /> Under Rp 95.000</li>
+                    <li><input type="radio" name="price" /> Under Rp 135.000</li>
+                    <li><input type="radio" name="price" /> Under Rp 180.000</li>
+                    <li><input type="radio" name="price" /> Any Price</li>
                 </ul>
 
                 <h4>Ingredient Type</h4>
                 <ul>
-                    <li><input type="radio" name="ing" /> Vegetables</li>
-                    <li><input type="radio" name="ing" /> Fruits</li>
-                    <li><input type="radio" name="ing" /> Meat</li>
-                    <li><input type="radio" name="ing" /> Seafood</li>
-                    <li><input type="radio" name="ing" /> Dairy</li>
-                    <li><input type="radio" name="ing" /> Bakery</li>
+                    <li><input type="checkbox" /> Vegetables</li>
+                    <li><input type="checkbox" /> Fruits</li>
+                    <li><input type="checkbox" /> Meat</li>
+                    <li><input type="checkbox" /> Seafood</li>
+                    <li><input type="checkbox" /> Dairy</li>
+                    <li><input type="checkbox" /> Bakery</li>
                 </ul>
             </aside>
 
-            {/* ===== Product Grid ===== */}
+            {/* Items */}
             <main className="main-content">
                 <h2>All Ingredients</h2>
 
@@ -125,6 +127,8 @@ function Store() {
 
                 </div>
             </main>
+        </div>
+
         </div>
         </>
     );

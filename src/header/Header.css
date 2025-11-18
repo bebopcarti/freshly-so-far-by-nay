@@ -53,6 +53,7 @@ header {
   color: #a7c958;
 }
 
+/* search input (left in file but not used on header currently) */
 .search-input {
   width: 250px;
   padding: 5px 15px 5px 15px;
@@ -63,10 +64,37 @@ header {
 }
 
 .search-input:focus {
-
   border-color: #386641;
 }
 
+/* Account area wrapper (keeps cart + login aligned) */
+.account-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Cart button - placed left of Login, matches header style */
+.cart-button {
+  display: inline-block;
+  padding: 8px 18px;
+  border: 2px solid #000000;
+  border-radius: 15px;
+  background: transparent;
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.18s, border-color 0.18s, color 0.18s;
+}
+
+.cart-button:hover {
+  border-color: #386641;
+  background-color: #386641;
+  color: #f2e8cf;
+}
+
+/* Login button (unchanged behavior, kept for consistency) */
 .login-button {
   width: 100%;
   height: auto;
@@ -77,6 +105,9 @@ header {
   border-radius: 15px;
   border-color: #000000;
   border-width: 2px;
+  text-decoration: none;
+  display: inline-block;
+  color: inherit;
 }
 
 .login-button:hover {

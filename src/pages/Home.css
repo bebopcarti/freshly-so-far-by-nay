@@ -1,127 +1,267 @@
-.section {
-    margin-top: 80px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.game-grid::-webkit-scrollbar {
-  height: 8px;
-}
-
-.game-grid::-webkit-scrollbar-thumb {
-  background: #c8102e;
-  border-radius: 4px;
-}
-
-.game-grid::-webkit-scrollbar-track {
-  background: #eee;
-}
-
-.css-slider-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
+.home-body {
   display: flex;
-  gap: 0;
+  flex-direction: column;
+  background-color: #f2e8cf;
 }
 
-.css-slider {
-  display: flex;
-  width: 100%;
-}
-
-.slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
+.home-banner {
   position: relative;
-}
-
-.slide img {
   width: 100%;
-  height: 60vh;
-  object-fit: cover;
-  display: block;
 }
 
-/*Game Cards*/
-.game-grid {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 1.5rem;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  justify-content: center;
-  scroll-snap-type: x mandatory;
-}
-
-.game-card {
-  flex: 0 0 180px;
-  scroll-snap-align: start;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  text-align: center;
-}
-
-.game-card img {
+.home-banner-img {
   width: 100%;
-  aspect-ratio: 2/3;
+  height: 65vh;
   object-fit: cover;
+  filter: none !important;
 }
 
-.game-card h3 {
-  font-size: 1rem;
-  margin: 0.5rem 0;
+.home-banner-text {
+  position: absolute;
+  top: 50%;
+  left: 15%;
+  transform: translateY(-50%);
+  color: white;
+  max-width: 550px;
 }
 
-.price {
+.home-banner-text h1 {
+  font-size: 3.5rem;
   font-weight: bold;
-  color: #000;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.price .original {
-  text-decoration: line-through;
-  color: #888;
-  margin-right: 5px;
+.home-banner-text p {
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
 }
 
-.categories {
+.home-banner-btn {
+  background-color: #a7c957;
+  padding: 12px 25px;
+  border-radius: 0;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.home-banner-btn:hover {
+  background-color: #6a994e;
+}
+
+
+.home-sections {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4rem 5rem;
+  width: 100%;
+}
+
+.home-sections h1 {
+  margin-bottom: 2rem;
+  color: #386641;
+}
+
+.home-caption {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.categories-wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1100px;
 }
 
-.category {
+.category-card {
   position: relative;
-  height: 150px;
+  height: 180px;
+  border-radius: 0;
   overflow: hidden;
-  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  background-color: #ddd;
 }
 
-.category img {
+.category-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(4px);
-  transform: scale(1.1);
+  filter: brightness(60%);
 }
 
-.category span {
+.category-card span {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #fff;
-  font-size: 1.5rem;
+  color: white;
   font-weight: bold;
-  text-shadow: 0 0 5px #000;
+  font-size: 1.3rem;
+  text-align: center;
 }
 
-.section {
-  padding: 3rem 2rem;
+.category-card:hover {
+  transform: scale(1.03);
 }
 
-.section h2 {
+
+.home-how {
+  background-color: #386641;
+}
+
+.home-how h1 {
+  color: white;
+}
+
+.how-wrapper {
+  display: flex;
+  gap: 3rem;
+}
+
+.how-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 0;
+  width: 260px;
+  text-align: center;
+}
+
+.how-card h2 {
+  color: #386641;
+  margin-bottom: 0.6rem;
+}
+
+.how-card p {
+  color: #6a994e;
+}
+
+.home-testimonials {
+  background-color: #f2e8cf;
+}
+
+.test-wrapper {
+  display: flex;
+  gap: 2rem;
+}
+
+.test-card {
+  background: white;
+  padding: 2rem;
+  width: 300px;
+  border-radius: 0;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.test-card p {
+  color: #386641;
   margin-bottom: 1rem;
-  color: #c8102e;
+}
+
+.test-card span {
+  font-weight: bold;
+  color: #bc4749;
+}
+
+.taste-section {
+  padding: 4rem 5rem;
+  text-align: center;
+  background-color: #f2e8cf;
+}
+
+.taste-title {
+  font-size: 2.3rem;
+  color: #386641;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.taste-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-bottom: 2.5rem;
+}
+
+.taste-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.8rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.taste-card {
+  position: relative;
+  height: 260px;
+  border-radius: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  background-color: #ddd;
+}
+
+.taste-card:hover {
+  transform: scale(1.03);
+}
+
+.taste-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.taste-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 1.2rem;
+  width: 100%;
+  color: white;
+  text-align: left;
+}
+
+.taste-overlay h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  text-shadow: 0 0 5px black;
+}
+
+.taste-tag {
+  margin-top: 0.5rem;
+  background-color: #ffd34f;
+  color: black;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+  border-radius: 0; /* Square */
+}
+
+/* BUTTON */
+.taste-button {
+  display: inline-block;
+  margin-top: 2.5rem;
+  background-color: #386641;
+  padding: 0.9rem 2rem;
+  color: white;
+  font-weight: bold;
+  border-radius: 0;
+  text-decoration: none;
+}
+
+.taste-button:hover {
+  background-color: #25472c;
 }

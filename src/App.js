@@ -8,6 +8,8 @@ import Register from './pages/Register.js';
 import About from './pages/About.js';
 import Home from './pages/Home.js';
 import Store from './pages/Store.js';
+import Cart from './pages/Cart.js';
+import Transaction from './pages/Transaction.js';
 // ------------ ~
 
 import './App.css'; // Main CSS (bisa override CSS page)
@@ -23,6 +25,8 @@ function App() {
           <Route path="/" element={<><Header /><Home /><Footer /></>} />
           <Route path="/store" element={<><Header /><Store /><Footer /></>} />
           <Route path="/about" element={<><Header /><About /><Footer /></>} />
+          <Route path="/cart" element={<><Header /><Cart /><Footer /></>} />
+          <Route path="/transaction" element={<Transaction />} />
         </Routes>
       </div>
     </Router>

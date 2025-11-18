@@ -1,147 +1,110 @@
 import './Home.css';
+import homeBanner from '../assets/hellofreshImage 2.jpg'; // KEEPING THE SPACE
 
 function Home() {
     return (
-        <>
-        <section class="css-slider-wrapper">
-            <div class="css-slider">
-                <div class="slide">
-                    <a href="store.html?game=persona5">
-                        <img src="https://images.alphacoders.com/137/thumb-1920-1370594.jpeg" alt="Persona 5 Royal" />
-                    </a>
-                </div>
-                <div class="slide">
-                    <a href="store.html?game=persona3">
-                        <img src="https://images7.alphacoders.com/134/thumb-1920-1344916.jpeg" alt="Persona 3 Reload" />
-                    </a>
-                </div>
-                <div class="slide">
-                    <a href="store.html?game=persona4">
-                        <img src="https://c4.wallpaperflare.com/wallpaper/993/425/252/persona-series-manga-persona-4-satonaka-chie-wallpaper-preview.jpg" />
-                    </a>
-                </div>
-            </div>
-            <div class="slider-text">AC Store Summer Sale up to 80%</div>
-        </section>
+        <div className="home-body">
 
-        <section class="section">
-            <h2>Special Offer</h2>
-            <div class="game-grid">
-                <div class="game-card">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1687950/header.jpg" alt="Persona 5 Royal" />
-                    <h3>Persona 5 Royal</h3>
-                    <p class="price"><span class="original">IDR 849,000</span> <span class="discounted">IDR 599,000</span></p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2161700/header.jpg" alt="Persona 3 Reload" />
-                    <h3>Persona 3 Reload</h3>
-                    <p class="price"><span class="original">IDR 849,000</span> <span class="discounted">IDR 649,000</span></p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1113000/header.jpg" alt="Persona 4 Golden" />
-                    <h3>Persona 4 Golden</h3>
-                    <p class="price"><span class="original">IDR 549,000</span> <span class="discounted">IDR 109,999</span></p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3061810/header.jpg?t=1748588899" alt="Like a Dragon" />
-                    <h3>Like a Dragon: Pirate Yakuza in Hawaii</h3>
-                    <p class="price"><span class="original">IDR 849,000</span> <span class="discounted">IDR 749,000</span></p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/834530/header.jpg?t=1741324846" alt="Yakuza Kiwami" />
-                    <h3>Yakuza Kiwami</h3>
-                    <p class="price"><span class="original">IDR 199,000</span> <span class="discounted">IDR 74,999</span></p>
+            {/* BANNER */}
+            <div className="home-banner">
+                <img className="home-banner-img" src={homeBanner} alt="Home Banner" />
+                <div className="home-banner-text">
+                    <h1>Fresh Ingredients Delivered to Your Doorstep</h1>
+                    <p>Healthy, fresh, and affordable groceries for everyone.</p>
+                    <a href="/store" className="home-banner-btn">Shop Now</a>
                 </div>
             </div>
-        </section>
 
-        <section class="section">
-            <h2>Browse by Category</h2>
-            <div class="categories">
-                <div class="category">
-                    <img src="https://store.akamai.steamstatic.com/categories/homepageimage/category/visual_novel?cc=us&l=english&v=2" alt="" />
-                    <span>RPG</span>
-                </div>
-                <div class="category">
-                    <img src="https://store.akamai.steamstatic.com/categories/homepageimage/category/action?cc=us&l=english&v=2" alt="" />
-                    <span>Action</span>
-                </div>
-                <div class="category">
-                    <img src="https://store.akamai.steamstatic.com/categories/homepageimage/vr?cc=us&l=english&v=2" alt="" />
-                    <span>Adventure</span>
-                </div>
-                <div class="category">
-                    <img src="https://store.akamai.steamstatic.com/categories/homepageimage/category/strategy?cc=us&l=english&v=2" alt="" />
-                    <span>Strategy</span>
-                </div>
-                <div class="category">
-                    <img src="https://store.akamai.steamstatic.com/categories/homepageimage/category/simulation?cc=us&l=english&v=2" alt="" />
-                    <span>Simulation</span>
-                </div>
-                <div class="category">
-                    <img src="https://store.akamai.steamstatic.com/categories/homepageimage/category/science_fiction?cc=us&l=english&v=2" alt="" />
-                    <span>JRPG</span>
+ {/* MENU RECIPE */}
+<div className="taste-section">
+    <h1 className="taste-title">
+        Reimagine Your Recipe
+    </h1>
+    <p className="taste-subtitle">
+        Recipe You Can Recreate on Your Home Using Our Ingredients.
+    </p>
+
+    <div className="taste-grid">
+
+        <div className="taste-card">
+            <img src="https://www.singaporeanmalaysianrecipes.com/wp-content/uploads/2024/06/nasi-goreng-usa-recipe.jpg" alt="Meat & Veggies" />
+            <div className="taste-overlay">
+                <h2>NASI GOREANG</h2>
+                <span className="taste-tag">MOST POPPULAR RECIPE</span>
+            </div>
+        </div>
+
+        <div className="taste-card">
+            <img src="https://www.shelovesbiscotti.com/wp-content/uploads/2020/06/Healthy-Fruit-Salad-Recipe.jpg" alt="Veggie" />
+            <div className="taste-overlay">
+                <h2>FRUIT SALAD</h2>
+                <span className="taste-tag">HEALTHY MEAL TO GO</span>
+            </div>
+        </div>
+
+        <div className="taste-card">
+            <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Pulled-aubergine-burger-47673ee.jpg" alt="Family Menu" />
+            <div className="taste-overlay">
+                <h2>PLANT BASED HAMBURGER</h2>
+                <span className="taste-tag">MEALS FOR VEGETARIAN</span>
+            </div>
+        </div>
+
+        <div className="taste-card">
+            <img src="https://www.allrecipes.com/thmb/DOgMge2dJv0Plavei2oPjvUm7o8=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/235589-chef-johns-creamy-mushroom-soup-DDMFS-4x3-14854a8dc51c4c4c80cc5631299a873b.jpg" alt="Fit & Wholesome" />
+            <div className="taste-overlay">
+                <h2>MUSHROOM SOUP</h2>
+                <span className="taste-tag">TASTE THE WARMTH</span>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="/store" className="taste-button">See Ingredients to Make</a>
+</div>
+
+
+            {/* HOW IT WORKS */}
+            <div className="home-sections home-how">
+                <h1>How It Works</h1>
+
+                <div className="how-wrapper">
+                    <div className="how-card">
+                        <h2>1. Lorem ipsum</h2>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </div>
+                    <div className="how-card">
+                        <h2>2. Lorem ipsum</h2>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </div>
+                    <div className="how-card">
+                        <h2>3. Lorem ipsum</h2>
+                        <p>Lorem ipsum dolor sit amet</p>
+                    </div>
                 </div>
             </div>
-        </section>
-            
-        <section class="section">
-            <h2>Featured Games</h2>
-            <div class="game-grid">
-                <div class="game-card">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1687950/header.jpg" alt="Persona 5 Royal" />
-                    <h3>Persona 5 Royal</h3>
-                    <p class="price"><span class="original">IDR 849,000</span> <span class="discounted">IDR 599,000</span></p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2161700/header.jpg" alt="Persona 3 Reload" />
-                    <h3>Persona 3 Reload</h3>
-                    <p class="price"><span class="original">IDR 849,000</span> <span class="discounted">IDR 649,000</span></p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1113000/header.jpg" alt="Persona 4 Golden" />
-                    <h3>Persona 4 Golden</h3>
-                    <p class="price"><span class="original">IDR 549,000</span> <span class="discounted">IDR 109,999</span></p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3061810/header.jpg?t=1748588899" alt="Like a Dragon" />
-                    <h3>Like a Dragon: Pirate Yakuza in Hawaii</h3>
-                    <p class="price">IDR 749,000</p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/834530/header.jpg?t=1741324846" alt="Yakuza Kiwami 2" />
-                    <h3>Yakuza Kiwami 2</h3>
-                    <p class="price">IDR 849,000</p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1875830/header.jpg?t=1731603822" alt="Shin Megami Tensei V" />
-                    <h3>Shin Megami Tensei V: Vengeance</h3>
-                    <p class="price">IDR 849,000</p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2288350/header.jpg?t=1753812149" alt="RAIDOU" />
-                    <h3>RAIDOU Remastered: The Mystery of the Soulless Army</h3>
-                    <p class="price">IDR 649,000</p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1237320/header.jpg?t=1741795892" alt="Sonic Frontiers" />
-                    <h3>Sonic Frontiers</h3>
-                    <p class="price">IDR 849,000</p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1235140/header.jpg?t=1741337797" alt="Yakuza: Like a Dragon" />
-                    <h3>Yakuza: Like a Dragon</h3>
-                    <p class="price">IDR 849,000</p>
-                </div>
-                <div class="game-card">
-                    <img src="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2679460/header.jpg?t=1749196876" alt="Metaphor" />
-                    <h3>Metaphor: ReFantazio</h3>
-                    <p class="price">IDR 999,000</p>
+
+            {/* TESTIMONIALS */}
+            <div className="home-sections home-testimonials">
+                <h1>What Our Customers Say</h1>
+
+                <div className="test-wrapper">
+                    <div className="test-card">
+                        <p>Lorem ipsum dolor sit amet</p>
+                        <span>- Lorem Ipsum</span>
+                    </div>
+                    <div className="test-card">
+                        <p>Lorem ipsum dolor sit amet</p>
+                        <span>- Lorem Ipsum</span>
+                    </div>
+                    <div className="test-card">
+                        <p>Lorem ipsum dolor sit amet</p>
+                        <span>- Lorem Ipsum</span>
+                    </div>
                 </div>
             </div>
-        </section>
-        </>
-    )
+        </div>
+    );
 }
 
-export default Home
+export default Home;
