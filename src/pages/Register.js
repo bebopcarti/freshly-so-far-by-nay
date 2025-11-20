@@ -30,26 +30,28 @@ function Register() {
       };
 
   return (
-    <div className="wrapper">
-        <form onSubmit={handleRegister}>
-            <h1>Register</h1>
-            <div class="input-box">
-                <input type="email" placeholder="Email" required 
-                onChange={(e) => setEmail(e.target.value)}/>
-                <i className='bx bx-envelope'></i>
-            </div>
-            <div className="input-box">
-                <input type="text" placeholder="Username" required 
-                onChange={(e) => setUsername(e.target.value)}/>
-                <i className='bx bx-user'></i>
-            </div>
-            <div className="input-box">
-                <input type="password" placeholder="Password" required 
-                onChange={(e) => setPassword(e.target.value)}/>
-                <i className='bx bx-lock-alt'></i>
-            </div>
-            <button type="submit" className="btn">Register</button>
-        </form>
+    <div class="register-body">
+      <div className="wrapper">
+          <form onSubmit={handleRegister}>
+              <h1>Register</h1>
+              <div class="input-box">
+                  <input type="email" placeholder="Email" required 
+                  onChange={(e) => setEmail(e.target.value)}/>
+                  <i className='bx bx-envelope'></i>
+              </div>
+              <div className="input-box">
+                  <input type="text" placeholder="Username" required 
+                  onChange={(e) => setUsername(e.target.value)}/>
+                  <i className='bx bx-user'></i>
+              </div>
+              <div className="input-box">
+                  <input type="password" placeholder="Password" required 
+                  onChange={(e) => setPassword(e.target.value)}/>
+                  <i className='bx bx-lock-alt'></i>
+              </div>
+              <button type="submit" className="btn">Register</button>
+          </form>
+      </div>
     </div>
   );
 }
