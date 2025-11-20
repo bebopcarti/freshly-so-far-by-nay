@@ -10,6 +10,7 @@ import Home from './pages/Home.js';
 import Store from './pages/Store.js';
 import Cart from './pages/Cart.js';
 import Transaction from './pages/Transaction.js';
+import Progress from './pages/Progress.js';
 // ------------ ~
 
 import './App.css'; // Main CSS (bisa override CSS page)
@@ -26,6 +27,7 @@ function App() {
           <Route path="/store" element={<><Header /><Store /><Footer /></>} />
           <Route path="/about" element={<><Header /><About /><Footer /></>} />
           <Route path="/cart" element={<><Header /><Cart /><Footer /></>} />
+          <Route path="/progress" element={<><Header /><Progress /><Footer /></>} />
           <Route path="/transaction" element={<Transaction />} />
         </Routes>
       </div>
