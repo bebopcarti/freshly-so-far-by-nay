@@ -1,0 +1,164 @@
+const express = require("express");
+const app = express();
+const db = require("./db");
+const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
+
+app.use(cors());
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Backend berjalan!");
+});
+
+app.listen(3001, () => {
+  console.log("Server berjalan di port 3001");
+});
+
+app.post("/register", (req, res) => {
+    const { email, username, password } = req.body;
+  
+    const sql = "INSERT INTO user (email, username, password, createdat) VALUES (?, ?, ?, NOW())";
+    const values = [email, username, password];
+  
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.log("Error:", err);
+        return res.status(500).json({ message: "Gagal register" });
+      }
+      res.json({ message: "Register berhasil" });
+    });
+  });
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  const sql = "SELECT * FROM user WHERE username = ? AND password = ?";
+  db.query(sql, [username, password], (err, results) => {
+    if (err) {
+      console.log("Error:", err);
+      return res.status(500).json({ message: "Gagal login" });
+    }
+
+    if (results.length > 0) {
+      res.json({
+        message: "Login berhasil",
+        user: results[0]
+      });
+    } else {
+      res.status(401).json({ message: "Username atau password salah" });
+    }
+  });
+});
+
+app.post("/login", (req, res) => {
+    const { username, password } = req.body;
+  
+    const sql = "SELECT * FROM user WHERE username = ? AND password = ?";
+    db.query(sql, [username, password], (err, results) => {
+      if (err) {
+        console.log("Error:", err);
+        return res.status(500).json({ message: "Gagal login" });
+      }
+  
+      if (results.length > 0) {
+        res.json({
+          message: "Login berhasil",
+          user: results[0]
+        });
+      } else {
+        res.status(401).json({ message: "Username atau password salah" });
+      }
+    });
+});
+
+// tempat folder upload
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // simpan di folder uploads/
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = Date.now() + path.extname(file.originalname);
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.post("/tambah-produk", upload.single("gambar"), (req, res) => {
+  const { nama, kategori, harga, stock } = req.body;
+  const gambar = req.file ? req.file.filename : null;
+
+  const sql = "INSERT INTO produk (nama, kategori, harga, stock, gambar, createdAt) VALUES (?, ?, ?, ?, ?, NOW())";
+
+  db.query(sql, [nama, kategori, harga, stock, gambar], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Gagal menambah produk" });
+    }
+
+    res.json({ message: "Produk berhasil ditambahkan" });
+  });
+});
+
+app.use("/uploads", express.static("uploads"));
+
+app.get("/produk", (req, res) => {
+  const sql = "SELECT * FROM produk ORDER BY produkId DESC";
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: "Error mengambil produk", error: err });
+    }
+    res.json(results);
+  });
+});
+
+app.delete("/produk/:id", (req, res) => {
+  const id = req.params.id;
+  const sql = "DELETE FROM produk WHERE produkId = ?";
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: "Error deleting product", error: err });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json({ message: "Product deleted successfully" });
+  });
+});
+
+app.post("/edit-produk/:id", (req, res, next) => {
+  upload.single("gambar")(req, res, function (err) {
+    if (err) return res.status(500).json({ message: "Upload error", error: err });
+
+    const produkId = req.params.id;
+    const { nama, kategori, harga, stock } = req.body;
+
+    let updateQuery = "";
+    let params = [];
+
+    if (req.file) {
+      updateQuery = `
+        UPDATE produk
+        SET nama = ?, kategori = ?, harga = ?, stock = ?, gambar = ?
+        WHERE produkId = ?
+      `;
+      params = [nama, kategori, harga, stock, req.file.filename, produkId];
+    } else {
+      updateQuery = `
+        UPDATE produk
+        SET nama = ?, kategori = ?, harga = ?, stock = ?
+        WHERE produkId = ?
+      `;
+      params = [nama, kategori, harga, stock, produkId];
+    }
+
+    db.query(updateQuery, params, (err, result) => {
+      if (err) return res.status(500).json({ error: err });
+
+      res.json({ message: "Produk berhasil diperbarui" });
+    });
+  });
+});

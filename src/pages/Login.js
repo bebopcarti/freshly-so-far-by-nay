@@ -1,26 +1,56 @@
 import { Link } from 'react-router-dom';
 import './loginstyle.css';
+import { useState } from 'react';
 
 function Login() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+      
+        const response = await fetch("http://localhost:3001/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            username,
+            password
+          })
+        });
+      
+        const data = await response.json();
+      
+        if (response.ok) {
+          alert("Login berhasil!");
+          console.log("User:", data.user);
+      
+          // Contoh: simpan user ke localStorage
+          localStorage.setItem("user", JSON.stringify(data.user));
+        } else {
+          alert(data.message);
+        }
+      };
+
   return (
-    <div class="main-body">
-        <div className="wrapper">
-            <form action="">
-                <h1>Login</h1>
-                <div className="input-box">
-                    <input type="text" name="username" placeholder="Username" required />
-                    <i className='bx bx-user'></i>
-                </div>
-                <div className="input-box">
-                    <input type="password" name="password" placeholder="Password" required />
-                    <i className='bx bx-lock-alt'></i>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <div className="register-link">
-                    <p>Tidak punya akun?<Link to='/register'> Register</Link></p>
-                </div>
-            </form>
-        </div>
+    <div className="wrapper">
+        <form onSubmit={handleSubmit}>
+            <h1>Login</h1>
+            <div className="input-box">
+                <input type="text" name="username" placeholder="Username" required 
+                onChange={(e) => setUsername(e.target.value)}/>
+                <i className='bx bx-user'></i>
+            </div>
+            <div className="input-box">
+                <input type="password" name="password" placeholder="Password" required 
+                onChange={(e) => setPassword(e.target.value)}/>
+                <i className='bx bx-lock-alt'></i>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div className="register-link">
+                <p>Tidak punya akun?<Link to='/register'> Register</Link></p>
+            </div>
+        </form>
     </div>
   );
 }

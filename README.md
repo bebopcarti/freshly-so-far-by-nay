@@ -1,5 +1,9 @@
 # FRESHMART JAYA JAYA JAYA
 
+# Buat folder backend (node js) perlu install
+1. multers -> buat upload file (admin add item)
+2. cors -> buat kasih izin domain tertentu biar browser bisa ambil resource
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
