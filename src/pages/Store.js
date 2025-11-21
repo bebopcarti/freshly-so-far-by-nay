@@ -20,7 +20,7 @@ function Store() {
                     <li><input type="radio" name="price" /> Any Price</li>
                 </ul>
 
-                <h4>Ingredient Type</h4>
+                <h4>Category</h4>
                 <ul>
                     <li><input type="checkbox" /> Vegetables</li>
                     <li><input type="checkbox" /> Fruits</li>

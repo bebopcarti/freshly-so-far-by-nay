@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Page Imports ~
 import Header from './header/Header.js';
+import Header2 from './header/Header2.js';
 import Footer from './footer/Footer.js';
 import Login from './pages/Login.js';
 import Register from './pages/Register.js';
@@ -21,14 +22,14 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<><Header2/><Login /></>} />
+          <Route path="/register" element={<><Header2/><Register /></>} />
           <Route path="/" element={<><Header /><Home /><Footer /></>} />
           <Route path="/store" element={<><Header /><Store /><Footer /></>} />
           <Route path="/about" element={<><Header /><About /><Footer /></>} />
           <Route path="/cart" element={<><Header /><Cart /><Footer /></>} />
           <Route path="/progress" element={<><Header /><Progress /><Footer /></>} />
-          <Route path="/transaction" element={<Transaction />} />
+          <Route path="/transaction" element={<><Header /><Transaction /></>} />
         </Routes>
       </div>
     </Router>
