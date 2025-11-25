@@ -17,6 +17,7 @@ app.listen(3001, () => {
   console.log("Server berjalan di port 3001");
 });
 
+//REGISTER - LOGIN
 app.post("/register", (req, res) => {
     const { email, username, password } = req.body;
   
@@ -74,7 +75,7 @@ app.post("/login", (req, res) => {
     });
 });
 
-// tempat folder upload
+//ADMIN PAGE (ADD PRODUCT)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/"); // simpan di folder uploads/
@@ -100,18 +101,6 @@ app.post("/tambah-produk", upload.single("gambar"), (req, res) => {
     }
 
     res.json({ message: "Produk berhasil ditambahkan" });
-  });
-});
-
-app.use("/uploads", express.static("uploads"));
-
-app.get("/produk", (req, res) => {
-  const sql = "SELECT * FROM produk ORDER BY createdAt ASC";
-  db.query(sql, (err, results) => {
-    if (err) {
-      return res.status(500).json({ message: "Error mengambil produk", error: err });
-    }
-    res.json(results);
   });
 });
 
@@ -160,5 +149,89 @@ app.post("/edit-produk/:id", (req, res, next) => {
 
       res.json({ message: "Produk berhasil diperbarui" });
     });
+  });
+});
+
+app.use("/uploads", express.static("uploads"));
+
+//STORE PAGE
+app.get("/produk/kategori/:kategori", (req, res) => {
+  const kategori = req.params.kategori;
+
+  const sql = "SELECT * FROM produk WHERE kategori = ?";
+  db.query(sql, [kategori], (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: "Error", error: err });
+    }
+    res.json(results);
+  });
+});
+
+app.post("/produk/filter", (req, res) => {
+  const categories = req.body;
+
+  if (!Array.isArray(categories)) {
+      return res.status(400).json({ message: "Invalid format" });
+  }
+
+  const sql = `SELECT * FROM produk WHERE kategori IN (?) ORDER BY produkId DESC`;
+
+  db.query(sql, [categories], (err, result) => {
+      if (err) {
+          console.log(err);
+          return res.status(500).json({ message: "Error", error: err });
+      }
+
+      res.json(result);
+  });
+});
+
+app.get("/produk", (req, res) => {
+  const sql = "SELECT * FROM produk ORDER BY createdAt ASC";
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: "Error mengambil produk", error: err });
+    }
+    res.json(results);
+  });
+});
+
+app.post("/produk/price", (req, res) => {
+  const { min, max } = req.body;
+
+  let sql = "SELECT * FROM produk WHERE harga >= ? AND harga <= ? ORDER BY produkId DESC";
+
+  db.query(sql, [min, max], (err, result) => {
+      if (err) {
+          console.log(err);
+          return res.status(500).json({ message: "Error", error: err });
+      }
+      res.json(result);
+  });
+});
+
+app.post("/produk/filter/all", (req, res) => {
+  const { categories, min, max } = req.body;
+
+  let params = [];
+  let sql = "SELECT * FROM produk WHERE harga BETWEEN ? AND ?";
+
+  params.push(min);
+  params.push(max);
+
+  if (categories.length > 0) {
+      const placeholders = categories.map(() => "?").join(",");
+      sql += ` AND kategori IN (${placeholders})`;
+      params.push(...categories);
+  }
+
+  sql += " ORDER BY produkId DESC";
+
+  db.query(sql, params, (err, result) => {
+      if (err) {
+          console.log(err);
+          return res.status(500).json({ message: "Error", error: err });
+      }
+      res.json(result);
   });
 });

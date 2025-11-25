@@ -4,15 +4,74 @@ import './Store.css';
 
 function Store() {
     const [produk, setProduk] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [priceRange, setPriceRange] = useState({ min: 0, max: 9999999999});
 
     useEffect(() => {
+        if (selectedCategories.length === 0) {
+          fetch("http://localhost:3001/produk")
+            .then(res => res.json())
+            .then(data => setProduk(data));
+        } else {
+          fetch("http://localhost:3001/produk/filter", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(selectedCategories)
+          })
+          .then(res => res.json())
+          .then(data => setProduk(data));
+        }
+    }, [selectedCategories]);
+
+    const toggleCategory = (kategori) => {
+        setSelectedCategories((prev) => {
+          if (prev.includes(kategori)) {
+            return prev.filter((item) => item !== kategori);
+          } else {
+            return [...prev, kategori];
+          }
+        });
+      };
+
+    const getSemuaProduk = () => {
         fetch("http://localhost:3001/produk")
           .then(res => res.json())
           .then(data => {
             setProduk(data);
-          })
-          .catch(err => console.error("Error mengambil produk:", err));
-    }, []);
+        });
+    };
+
+    useEffect(() => {
+        fetch("http://localhost:3001/produk/price", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(priceRange)
+        })
+        .then(res => res.json())
+        .then(data => setProduk(data));
+    }, [priceRange]);
+
+    const handlePriceChange = (min, max) => {
+        setPriceRange({ min, max });
+    };
+
+    useEffect(() => {
+        fetch("http://localhost:3001/produk/filter/all", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                categories: selectedCategories,
+                min: priceRange.min,
+                max: priceRange.max
+            })
+        })
+        .then(res => res.json())
+        .then(data => setProduk(data));
+    }, [selectedCategories, priceRange]);
 
     return (
         <>
@@ -26,22 +85,24 @@ function Store() {
 
                 <h4>Price Range</h4>
                 <ul>
-                    <li><input type="radio" name="price" /> Under Rp 45.000</li>
-                    <li><input type="radio" name="price" /> Under Rp 95.000</li>
-                    <li><input type="radio" name="price" /> Under Rp 135.000</li>
-                    <li><input type="radio" name="price" /> Under Rp 180.000</li>
-                    <li><input type="radio" name="price" /> Any Price</li>
+                    <li><input type="radio" name="price" onChange={() => handlePriceChange(0, 45000)}/> Under IDR 45.000</li>
+                    <li><input type="radio" name="price" onChange={() => handlePriceChange(0, 95000)}/> Under IDR 95.000</li>
+                    <li><input type="radio" name="price" onChange={() => handlePriceChange(0, 135000)}/> Under IDR 135.000</li>
+                    <li><input type="radio" name="price" onChange={() => handlePriceChange(0, 180000)}/> Under IDR 180.000</li>
+                    <li><input type="radio" name="price" onChange={() => handlePriceChange(0, 9999999999)}/> Any Price</li>
                 </ul>
 
                 <h4>Category</h4>
                 <ul>
-                    <li><input type="checkbox" /> Vegetables</li>
-                    <li><input type="checkbox" /> Fruits</li>
-                    <li><input type="checkbox" /> Meat</li>
-                    <li><input type="checkbox" /> Seafood</li>
-                    <li><input type="checkbox" /> Dairy</li>
-                    <li><input type="checkbox" /> Bakery</li>
+                    <li><input type="checkbox" onChange={() => toggleCategory("Vegetables")} /> Vegetables</li>
+                    <li><input type="checkbox" onChange={() => toggleCategory("Fruits")} /> Fruits</li>
+                    <li><input type="checkbox" onChange={() => toggleCategory("Meat")} /> Meat</li>
+                    <li><input type="checkbox" onChange={() => toggleCategory("Seafood")} /> Seafood</li>
+                    <li><input type="checkbox" onChange={() => toggleCategory("Dairy")}/> Dairy</li>
+                    <li><input type="checkbox" onChange={() => toggleCategory("Bakery")}/> Bakery</li>
                 </ul>
+
+                <li><input type="checkbox" onClick={getSemuaProduk} /> All Ingredients</li>
             </aside>
 
             {/* Items */}
