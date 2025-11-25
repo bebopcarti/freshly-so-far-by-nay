@@ -125,11 +125,12 @@ function Admin() {
           <table>
             <thead>
               <tr>
-                <th>Menu</th>
-                <th>Gambar</th>
-                <th>Harga</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Image</th>
+                <th>Price</th>
                 <th>Stock</th>
-                <th>Aksi</th>
+                <th>Action</th>
                 <th></th>
               </tr>
             </thead>
@@ -137,6 +138,7 @@ function Admin() {
               {produk.map((p) => (
                 <tr key={p.produkId}>
                   <td>{p.nama}</td>
+                  <td>{p.kategori}</td>
                   <td>
                     <img
                     src={`http://localhost:3001/uploads/${p.gambar}`}

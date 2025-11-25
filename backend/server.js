@@ -106,7 +106,7 @@ app.post("/tambah-produk", upload.single("gambar"), (req, res) => {
 app.use("/uploads", express.static("uploads"));
 
 app.get("/produk", (req, res) => {
-  const sql = "SELECT * FROM produk ORDER BY produkId DESC";
+  const sql = "SELECT * FROM produk ORDER BY createdAt ASC";
   db.query(sql, (err, results) => {
     if (err) {
       return res.status(500).json({ message: "Error mengambil produk", error: err });
