@@ -4,6 +4,10 @@
 1. multers -> buat upload file (admin add item)
 2. cors -> buat kasih izin domain tertentu biar browser bisa ambil resource
 
+# CARA JALANIN DI 1 TERMINAL
+1. install concurrently -> npm install concurrently --save-dev
+2. jalaninnya kayak react -> npm start
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

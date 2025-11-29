@@ -152,7 +152,7 @@ app.post("/edit-produk/:id", (req, res, next) => {
   });
 });
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //STORE PAGE
 app.get("/produk/kategori/:kategori", (req, res) => {
