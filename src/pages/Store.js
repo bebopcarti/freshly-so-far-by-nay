@@ -7,6 +7,16 @@ function Store() {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 9999999999});
 
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    fetch("http://localhost:3001/cart/getOrCreate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.userId })
+    })
+    .then(res => res.json())
+    .then(data => console.log("Cart ID:", data.cartId));
+
     useEffect(() => {
         if (selectedCategories.length === 0) {
           fetch("http://localhost:3001/produk")

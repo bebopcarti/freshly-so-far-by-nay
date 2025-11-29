@@ -235,3 +235,33 @@ app.post("/produk/filter/all", (req, res) => {
       res.json(result);
   });
 });
+
+//CART PAGE
+app.post("/cart/getOrCreate", (req, res) => {
+  const { userId } = req.body;
+
+  // 1. Cek apakah user sudah punya cart
+  db.query(
+    "SELECT * FROM keranjang WHERE userId = ? LIMIT 1",
+    [userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err });
+
+      if (result.length > 0) {
+        // Sudah ada cart
+        return res.json({ cartId: result[0].cartId });
+      }
+
+      // 2. Kalau belum ada → buat baru
+      db.query(
+        "INSERT INTO keranjang (userId, createdAt, updatedAt) VALUES (?, NOW(), NOW())",
+        [userId],
+        (err2, result2) => {
+          if (err2) return res.status(500).json({ error: err2 });
+
+          res.json({ cartId: result2.insertId });
+        }
+      );
+    }
+  );
+});

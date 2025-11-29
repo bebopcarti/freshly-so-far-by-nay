@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 24, 2025 at 04:00 AM
+-- Generation Time: Nov 29, 2025 at 04:24 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,18 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `kategori`
---
-
-CREATE TABLE `kategori` (
-  `kategoriId` int(11) NOT NULL,
-  `nama` varchar(50) NOT NULL,
-  `createdAt` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `keranjang`
 --
 
@@ -45,6 +33,14 @@ CREATE TABLE `keranjang` (
   `createdAt` date NOT NULL,
   `updatedAt` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `keranjang`
+--
+
+INSERT INTO `keranjang` (`cartId`, `userId`, `createdAt`, `updatedAt`) VALUES
+(1, 1, '2025-11-27', '2025-11-27'),
+(2, 1, '2025-11-27', '2025-11-27');
 
 -- --------------------------------------------------------
 
@@ -139,7 +135,14 @@ CREATE TABLE `produk` (
 --
 
 INSERT INTO `produk` (`produkId`, `kategori`, `nama`, `harga`, `stock`, `gambar`, `createdAt`) VALUES
-(2, 'Fruits', 'Fresh Apples (1kg)', '25000', 15, '1763538287363.jpg', '2025-11-19 14:44:47');
+(2, 'Fruits', 'Fresh Apples (1kg)', '25000', 15, '1763538287363.jpg', '2025-11-19 14:44:47'),
+(3, 'Fruits', 'Bananas (1kg)', '18000', 15, '1764040264949.jpg', '2025-11-25 10:11:04'),
+(5, 'Bakery', 'Whole Wheat Bread', '28000', 15, '1764040600886.jpg', '2025-11-25 10:16:40'),
+(6, 'Meat', 'Chicken Breast (500g)', '38000', 15, '1764040663439.jpg', '2025-11-25 10:17:43'),
+(7, 'Vegetables', 'Fresh Broccoli (1pc)', '12000', 15, '1764040720065.jpg', '2025-11-25 10:18:40'),
+(8, 'Dairy', 'Fresh milk (1L)', '19000', 15, '1764040809891.jpg', '2025-11-25 10:20:09'),
+(9, 'Meat', 'Eggs (12pcs)', '22000', 10, '1764040898287.png', '2025-11-25 10:21:38'),
+(10, 'seafood', 'Fresh Salmon (300g)', '85000', 10, '1764040949926.jpg', '2025-11-25 10:22:29');
 
 -- --------------------------------------------------------
 
@@ -152,6 +155,7 @@ CREATE TABLE `user` (
   `username` varchar(30) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(20) NOT NULL,
+  `role` varchar(10) NOT NULL DEFAULT 'buyer',
   `createdAt` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -159,19 +163,15 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`userId`, `username`, `email`, `password`, `createdAt`) VALUES
-(1, 'usertest', 'test@gmail.com', 'test123', '2025-11-18'),
-(3, 'ppw6', 'ppw@gmail.com', 'ppw654', '2025-11-18');
+INSERT INTO `user` (`userId`, `username`, `email`, `password`, `role`, `createdAt`) VALUES
+(1, 'usertest', 'test@gmail.com', 'test123', 'buyer', '2025-11-18'),
+(2, 'Admin6', 'admin6@gmail.com', 'admin6', 'admin', '2025-11-19'),
+(3, 'ppw6', 'ppw@gmail.com', 'ppw654', 'buyer', '2025-11-18'),
+(4, 'cobacoba', 'coba12@gmail.com', 'coba234', 'buyer', '2025-11-27');
 
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `kategori`
---
-ALTER TABLE `kategori`
-  ADD PRIMARY KEY (`kategoriId`);
 
 --
 -- Indexes for table `keranjang`
@@ -221,8 +221,7 @@ ALTER TABLE `pengantaran`
 -- Indexes for table `produk`
 --
 ALTER TABLE `produk`
-  ADD PRIMARY KEY (`produkId`),
-  ADD KEY `kategoriId` (`kategori`);
+  ADD PRIMARY KEY (`produkId`);
 
 --
 -- Indexes for table `user`
@@ -235,16 +234,10 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT for table `kategori`
---
-ALTER TABLE `kategori`
-  MODIFY `kategoriId` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `keranjang`
 --
 ALTER TABLE `keranjang`
-  MODIFY `cartId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cartId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `keranjang_item`
@@ -280,13 +273,13 @@ ALTER TABLE `pengantaran`
 -- AUTO_INCREMENT for table `produk`
 --
 ALTER TABLE `produk`
-  MODIFY `produkId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `produkId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
