@@ -27,17 +27,17 @@ function Login() {
         const data = await response.json();
         
         // DEBUG
-        const testData = {
-          "message": "Login berhasil",
-          "user": {
-            "userId": 1,
-            "username": "usertest",
-            "password": "test123",
-            "email": "test@gmail.com",
-            "role": "buyer",
-            "createdAt": "2025-11-18"
-          }
-        }
+        // const testData = {
+        //   "message": "Login berhasil",
+        //   "user": {
+        //     "userId": 1,
+        //     "username": "usertest",
+        //     "password": "test123",
+        //     "email": "test@gmail.com",
+        //     "role": "buyer",
+        //     "createdAt": "2025-11-18"
+        //   }
+        // }
         // ---
       
         if (response.ok) {
@@ -47,13 +47,13 @@ function Login() {
           
           // Contoh: simpan user ke localStorage
           localStorage.setItem("user", JSON.stringify(data.user));
-          navigate('/')
+          navigate('/');
           
-        } else {
-          login(testData.user) // DEBUG
-          localStorage.setItem("user", JSON.stringify(testData.user)); // DEBUG
-          alert(testData.message);
-          navigate(`/`); // DEBUG
+        // } else {
+        //   login(testData.user) // DEBUG
+        //   localStorage.setItem("user", JSON.stringify(testData.user)); // DEBUG
+        //   alert(testData.message);
+        //   navigate('/'); // DEBUG
         }
       };
 

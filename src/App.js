@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.js';
 
 // Page Imports ~
+import DynamicHeader from './header/DynamicHeader.js';
+import AdminHeader from './header/AdminHeader.js';
 import Header from './header/Header.js';
 import Header2 from './header/Header2.js';
 import Footer from './footer/Footer.js';
@@ -15,18 +17,30 @@ import Transaction from './pages/Transaction.js';
 import Progress from './pages/Progress.js';
 import TransactionHistory from './pages/TransactionHistory.js';
 import Admin from './pages/Admin.js';
-import AdminHeader from './header/AdminHeader.js';
 // ------------ ~
 
 import './App.css'; // Main CSS (bisa override CSS page)
 
 function HomeOrAdmin() {
   const { user } = useAuth();
-  if (user && user.role === 'admin') {
-      return (<><AdminHeader /><Admin /></>);
-  }
 
-  return (<><Header /><Home /><Footer /></>);
+  return (
+    <>
+      <DynamicHeader />
+
+      {user && user.role === 'admin' ? (
+        <>
+          <Admin />
+        </>
+      ) : (
+        <>
+          <Home />
+        </>
+      )}
+
+      <Footer />
+    </>
+  );
 }
 
 function App() {
@@ -39,12 +53,12 @@ function App() {
             <Route path="/login" element={<><Header2/><Login /></>} />
             <Route path="/register" element={<><Header2/><Register /></>} />
             <Route path="/" element={<HomeOrAdmin />} />
-            <Route path="/store" element={<><Header /><Store /><Footer /></>} />
-            <Route path="/about" element={<><Header /><About /><Footer /></>} />
-            <Route path="/cart" element={<><Header /><Cart /><Footer /></>} />
-            <Route path={`/progress/:userId`} element={<><Header /><Progress /><Footer /></>} />
-            <Route path="/transaction" element={<><Header /><Transaction /></>} />
-            <Route path="/transaction-history" element={<><Header /><TransactionHistory /></>} />
+            <Route path="/store" element={<><DynamicHeader /><Store /><Footer /></>} />
+            <Route path="/about" element={<><DynamicHeader /><About /><Footer /></>} />
+            <Route path="/cart" element={<><DynamicHeader /><Cart /><Footer /></>} />
+            <Route path={`/progress/:userId`} element={<><DynamicHeader /><Progress /><Footer /></>} />
+            <Route path="/transaction" element={<><DynamicHeader /><Transaction /></>} />
+            <Route path="/transaction-history" element={<><DynamicHeader /><TransactionHistory /></>} />
           </Routes>
         
         </div>

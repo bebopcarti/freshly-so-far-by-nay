@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-import './admin.css'
+import './admin.css';
 import { useAuth } from '../context/AuthContext';
 
 function Admin() {

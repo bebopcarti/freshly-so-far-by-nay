@@ -7,15 +7,31 @@ function Store() {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 9999999999});
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user") || "null");
 
-    fetch("http://localhost:3001/cart/getOrCreate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.userId })
-    })
-    .then(res => res.json())
-    .then(data => console.log("Cart ID:", data.cartId));
+    useEffect(() => {
+        if (!user) {
+            console.log("User belum login → Cart tidak dibuat");
+            return;
+        }
+
+        fetch("http://localhost:3001/cart/getOrCreate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: user.userId })
+        })
+        .then(res => res.json())
+        .then(data => console.log("Cart ID:", data.cartId))
+        .catch(err => console.log("Cart error:", err));
+    }, []);
+
+    // fetch("http://localhost:3001/cart/getOrCreate", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({ userId: user.userId })
+    // })
+    // .then(res => res.json())
+    // .then(data => console.log("Cart ID:", data.cartId));
 
     useEffect(() => {
         if (selectedCategories.length === 0) {

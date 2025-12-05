@@ -4,7 +4,7 @@ const AuthContext = createContext(null);
 
 
 // DEBUG 
-// const test = 1;
+// const test = 0;
 // const testuser = {
 //     userId: 1,
 //     username: "usertest",
@@ -19,7 +19,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
-        // DEBUG
+        // // DEBUG
         // if (test == 1) {
         //     return testuser
         // }
