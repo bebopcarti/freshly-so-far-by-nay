@@ -30,7 +30,7 @@ function Header() {
             { user ? (
               <>
                 <Link to="/cart" class="cart header-button">Cart</Link>
-                <Link to={`/progress/${user.userId}`} class="progress header-button">Progress</Link>
+                <Link to={`/transaction-history/${user.userId}`} class="progress header-button">History</Link>
                 <button onClick={handleLogout} class="logout header-button">Logout</button>
               </>
             ) : (

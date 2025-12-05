@@ -13,9 +13,13 @@ app.get("/", (req, res) => {
   res.send("Backend berjalan!");
 });
 
-app.listen(3001, () => {
-  console.log("Server berjalan di port 3001");
+app.listen(3001, "0.0.0.0", () => {
+    console.log("Server berjalan di port 3001");
 });
+
+// app.listen(3001, () => {
+//   console.log("Server berjalan di port 3001");
+// });
 
 //REGISTER - LOGIN
 app.post("/register", (req, res) => {
@@ -267,46 +271,67 @@ app.post("/cart/getOrCreate", (req, res) => {
 });
 
 // TRANSACTION HISTORY PAGE
-app.get('/transaction-history', (req, res) => {
-    const sql = "SELECT orderId, paymentStatus, paymentDate FROM pembayaran";
-    
-    db.query(sql, (err, data) => {
+app.get('/transaction-history/:userId', (req, res) => {
+  const userId = req.params.userId;
+  const sql = `
+        SELECT 
+            p.orderId, 
+            p.paymentStatus, 
+            p.paymentDate 
+        FROM 
+            pembayaran p
+        JOIN 
+            \`order\` o ON p.orderId = o.orderId
+        WHERE 
+            o.userId = ?
+    `;
+
+  if (!userId) {
+        return res.status(400).json({ error: "Missing userId in path" });
+    }
+  
+  db.query(sql, [userId], (err, data) => {
         if (err) {
-            console.error(err);
+            console.error("Database query error for transaction history:", err);
             return res.status(500).json({ error: "Database query error" });
         }
+        
         return res.json(data);
     });
 });
 
 // PROGRESS PAGE
-app.get('/progress/:userId', (req, res) => {
+app.get('/progress/:userId/:orderId', (req, res) => {
     const userId = req.params.userId;
+    const orderId = req.params.orderId;
+
+    if (!userId || !orderId) {
+        return res.status(400).json({ error: "Missing required parameters (userId or orderId)." });
+    }
 
     const sql = `
         SELECT
-            \`ORDER\`.orderId,
-            \`ORDER\`.createdAt,
-            \`ORDER\`.totalAmount,
-            \`ORDER\`.orderStatus AS orderStatus,
-            DELIVERY.deliveryDate,
-            DELIVERY.deliveryStatus,
-            PAYMENT.paymentStatus
-        FROM \`ORDER\`
-        INNER JOIN DELIVERY ON \`ORDER\`.orderId = DELIVERY.orderId
-        INNER JOIN PAYMENT ON \`ORDER\`.orderId = PAYMENT.orderId
-        WHERE \`ORDER\`.userId = ?
-        ORDER BY \`ORDER\`.createdAt DESC;
+            o.orderId,
+            o.createdAt,
+            o.totalAmount,
+            o.orderStatus AS orderStatus,
+            d.deliveryDate,
+            d.deliveryStatus,
+            p.paymentStatus
+        FROM \`ORDER\` o
+        INNER JOIN DELIVERY d ON o.orderId = d.orderId
+        INNER JOIN PAYMENT p ON o.orderId = p.orderId
+        WHERE 
+            o.userId = ? 
+            AND o.orderId = ?
     `;
-    
-    db.query(sql, [userId], (err, data) => {
+    db.query(sql, [userId, orderId], (err, data) => {
         if (err) {
             console.error("MySQL Tracking Error:", err);
             return res.status(500).json({ 
-                error: "Failed to fetch tracking data. Check your SQL and table names (especially 'ORDER')." 
+                error: "Failed to fetch tracking data." 
             });
         }
-        
         return res.json(data);
     });
 });

@@ -186,10 +186,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userId`, `username`, `email`, `password`, `role`, `createdAt`) VALUES
+(0, 'Admin6', 'admin6@gmail.com', 'admin6', 'admin', '2025-11-19'),
 (1, 'usertest', 'test@gmail.com', 'test123', 'buyer', '2025-11-18'),
-(2, 'Admin6', 'admin6@gmail.com', 'admin6', 'admin', '2025-11-19'),
-(3, 'ppw6', 'ppw@gmail.com', 'ppw654', 'buyer', '2025-11-18'),
-(4, 'cobacoba', 'coba12@gmail.com', 'coba234', 'buyer', '2025-11-27');
+(2, 'ppw6', 'ppw@gmail.com', 'ppw654', 'buyer', '2025-11-18'),
+(3, 'cobacoba', 'coba12@gmail.com', 'coba234', 'buyer', '2025-11-27');
 
 --
 -- Indexes for dumped tables
