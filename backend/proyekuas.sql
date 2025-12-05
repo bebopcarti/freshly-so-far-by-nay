@@ -101,6 +101,17 @@ CREATE TABLE `pembayaran` (
   `paymentDate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `pembayaran`
+--
+
+INSERT INTO `pembayaran` (`paymentId`, `orderId`, `method`, `paymentStatus`, 'paymentDate') VALUES
+(701, 5001, 'Card', 'COMPLETED', '2025-11-20 10:45:00'),
+(702, 5002, 'QRIS', 'PENDING', '2025-11-21 11:30:00'),
+(703, 5003, 'QRIS', 'COMPLETED', '2025-12-05 07:15:00'),
+(704, 5004, 'COD', 'FAILED', '2025-12-05 09:30:00');
+
+
 -- --------------------------------------------------------
 
 --
@@ -110,9 +121,20 @@ CREATE TABLE `pembayaran` (
 CREATE TABLE `pengantaran` (
   `deliveryId` int(11) NOT NULL,
   `orderId` int(11) NOT NULL,
-  `deliveryStatus` varchar(50) NOT NULL,
+  `deliveryStatus` tinyint(1) NOT NULL,
   `deliveryDate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pengantaran`
+--
+
+INSERT INTO `pengantaran` (`deliveryId`, `orderId`, `deliveryStatus`, `deliveryDate`) VALUES
+(101, 5001, '0', '2025-11-20 14:30:00'),
+(102, 5002, '1', '2025-12-04 10:15:00'),
+(103, 5003, '2', '2025-12-05 08:00:00');
+(104, 5004, '3', '2025-12-06 09:00:00');
+
 
 -- --------------------------------------------------------
 
