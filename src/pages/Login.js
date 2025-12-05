@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext.js';
 import './loginstyle.css';
 import { useState } from 'react';
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const { login } = useAuth();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
       
@@ -22,6 +26,7 @@ function Login() {
         const data = await response.json();
       
         if (response.ok) {
+          login(data.user)
           alert("Login berhasil!");
           console.log("User:", data.user);
       

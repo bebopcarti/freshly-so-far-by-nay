@@ -265,3 +265,48 @@ app.post("/cart/getOrCreate", (req, res) => {
     }
   );
 });
+
+// TRANSACTION HISTORY PAGE
+app.get('/transaction-history', (req, res) => {
+    const sql = "SELECT orderId, paymentStatus, paymentDate FROM pembayaran";
+    
+    db.query(sql, (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Database query error" });
+        }
+        return res.json(data);
+    });
+});
+
+// PROGRESS PAGE
+app.get('/progress/:userId', (req, res) => {
+    const userId = req.params.userId;
+
+    const sql = `
+        SELECT
+            \`ORDER\`.orderId,
+            \`ORDER\`.createdAt,
+            \`ORDER\`.totalAmount,
+            \`ORDER\`.orderStatus AS orderStatus,
+            DELIVERY.deliveryDate,
+            DELIVERY.deliveryStatus,
+            PAYMENT.paymentStatus
+        FROM \`ORDER\`
+        INNER JOIN DELIVERY ON \`ORDER\`.orderId = DELIVERY.orderId
+        INNER JOIN PAYMENT ON \`ORDER\`.orderId = PAYMENT.orderId
+        WHERE \`ORDER\`.userId = ?
+        ORDER BY \`ORDER\`.createdAt DESC;
+    `;
+    
+    db.query(sql, [userId], (err, data) => {
+        if (err) {
+            console.error("MySQL Tracking Error:", err);
+            return res.status(500).json({ 
+                error: "Failed to fetch tracking data. Check your SQL and table names (especially 'ORDER')." 
+            });
+        }
+        
+        return res.json(data);
+    });
+});
