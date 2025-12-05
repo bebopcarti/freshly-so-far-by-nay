@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import './loginstyle.css';
 import { useState } from 'react';
@@ -8,6 +8,7 @@ function Login() {
     const [password, setPassword] = useState("");
 
     const { login } = useAuth();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,16 +25,35 @@ function Login() {
         });
       
         const data = await response.json();
+        
+        // DEBUG
+        const testData = {
+          "message": "Login berhasil",
+          "user": {
+            "userId": 1,
+            "username": "usertest",
+            "password": "test123",
+            "email": "test@gmail.com",
+            "role": "buyer",
+            "createdAt": "2025-11-18"
+          }
+        }
+        // ---
       
         if (response.ok) {
           login(data.user)
           alert("Login berhasil!");
           console.log("User:", data.user);
-      
+          
           // Contoh: simpan user ke localStorage
           localStorage.setItem("user", JSON.stringify(data.user));
+          navigate('/')
+          
         } else {
-          alert(data.message);
+          login(testData.user) // DEBUG
+          localStorage.setItem("user", JSON.stringify(testData.user)); // DEBUG
+          alert(testData.message);
+          navigate(`/`); // DEBUG
         }
       };
 

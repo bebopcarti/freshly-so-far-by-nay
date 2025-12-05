@@ -86,41 +86,6 @@ function TransactionHistory() {
             </div>
         </div>
     );
-
-    // return (
-    //     <div class="transact-body">
-    //         <div class="transact-wrapper">
-    //             <h1>Your Transaction History</h1>
-    //             <table class="history-table">
-    //                 <tr>
-    //                     <th>#</th>
-    //                     <th>Order ID</th>
-    //                     <th>Date</th>
-    //                     <th>Total</th>
-    //                 </tr>
-    //                 <tr>
-    //                     <td>1</td>
-    //                     <td>0001</td>
-    //                     <td>27/11/2025</td>
-    //                     <td>Rp15.000</td>
-    //                 </tr>
-    //                 <tr>
-    //                     <td>2</td>
-    //                     <td>0002</td>
-    //                     <td>28/11/2025</td>
-    //                     <td>Rp50.000</td>
-    //                 </tr>
-    //                 <tr>
-    //                     <td>-</td>
-    //                     <td>-</td>
-    //                     <td>-</td>
-    //                     <td>-</td>
-    //                 </tr>
-    //             </table>
-    //         </div>
-    //     </div>
-    // );
-
 }
 
 export default TransactionHistory 

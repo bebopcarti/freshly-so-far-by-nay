@@ -1,4 +1,6 @@
 import './Progress.css';
+import { useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import _2 from '../assets/box-white.png';
 import _3 from '../assets/cargo-truck-white.png';
 import _1 from '../assets/shopping-cart-white.png';
@@ -18,8 +20,8 @@ const getProgressWidth = (status) => {
 };
 
 function Progress() {
-    // const { userId } = useParams(); 
-    // const [orders, setOrders] = useState([]);
+    const { userId } = useParams();
+    const [orders, setOrders] = useState([]);
     
     const testOrders = [
         {
@@ -45,26 +47,22 @@ function Progress() {
     const latestOrder = testOrders.length > 0 ? testOrders[0] : null;
     const deliveryProgressWidth = latestOrder ? getProgressWidth(latestOrder.deliveryStatus) : 0;
     
-    // useEffect(() => {
-    //     if (!userId) {
-    //         setError("User ID is missing from the URL.");
-    //         setLoading(false);
-    //         return;
-    //     }
+    useEffect(() => {
+        if (!userId) {
+            console.error("User ID is missing from the URL.");
+            return;
+        }
 
-    //     const apiUrl = `http://localhost:3001/progress/${userId}`;
+        const apiUrl = `http://localhost:3001/progress/${userId}`;
         
-    //     fetch(apiUrl)
-    //     .then(data => {
-    //             setOrders(Array.isArray(data) ? data : []);
-    //             setLoading(false);
-    //         })
-    //         .catch(err => {
-    //             console.error("Fetch error:", err);
-    //             setError(`Failed to load data: ${err.message}. Check Node.js console.`);
-    //             setLoading(false);
-    //         });
-    // }, [userId]);
+        fetch(apiUrl)
+        .then(data => {
+                setOrders(Array.isArray(data) ? data : []);
+            })
+            .catch(err => {
+                console.error("Fetch error:", err);
+            });
+    }, [userId]);
     
     const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleDateString() : 'N/A';
     const formatAmount = (amount) => amount ? `Rp${amount.toLocaleString('id')}` : 'N/A';

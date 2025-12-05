@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Transaction.css";
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 import qrisCode from "../assets/qris.jpg";
 
@@ -16,12 +17,14 @@ function Transaction() {
 
     const [showQR, setShowQR] = useState(false);
 
+    const { user } = useAuth();
+
     const handleCheckout = () => {
         if (method === "qris") {
             setShowQR(true);
             return;
         }
-        navigate("/progress");
+        navigate(`/progress/${user.userId}}`);
     };
 
     return (

@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext.js';
+import { AuthProvider, useAuth } from './context/AuthContext.js';
 
 // Page Imports ~
 import Header from './header/Header.js';
@@ -20,6 +20,14 @@ import AdminHeader from './header/AdminHeader.js';
 
 import './App.css'; // Main CSS (bisa override CSS page)
 
+function HomeOrAdmin() {
+  const { user } = useAuth();
+  if (user && user.role === 'admin') {
+      return (<><AdminHeader /><Admin /></>);
+  }
+
+  return (<><Header /><Home /><Footer /></>);
+}
 
 function App() {
   return (
@@ -30,16 +38,15 @@ function App() {
           <Routes>
             <Route path="/login" element={<><Header2/><Login /></>} />
             <Route path="/register" element={<><Header2/><Register /></>} />
-            <Route path="/" element={<><Header /><Home /><Footer /></>} />
+            <Route path="/" element={<HomeOrAdmin />} />
             <Route path="/store" element={<><Header /><Store /><Footer /></>} />
             <Route path="/about" element={<><Header /><About /><Footer /></>} />
             <Route path="/cart" element={<><Header /><Cart /><Footer /></>} />
-            <Route path="/progress/:userId" element={<><Header /><Progress /><Footer /></>} />
+            <Route path={`/progress/:userId`} element={<><Header /><Progress /><Footer /></>} />
             <Route path="/transaction" element={<><Header /><Transaction /></>} />
             <Route path="/transaction-history" element={<><Header /><TransactionHistory /></>} />
           </Routes>
         
-          {/* <Admin /> */}
         </div>
       </Router>
     </AuthProvider>

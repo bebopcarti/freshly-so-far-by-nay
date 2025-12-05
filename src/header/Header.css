@@ -67,15 +67,13 @@ header {
   border-color: #386641;
 }
 
-/* Account area wrapper (keeps cart + login aligned) */
 .account-info {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* Cart button - placed left of Login, matches header style */
-.cart-button {
+.header-button {
   display: inline-block;
   padding: 8px 18px;
   border: 2px solid #000000;
@@ -88,29 +86,7 @@ header {
   transition: background-color 0.18s, border-color 0.18s, color 0.18s;
 }
 
-.cart-button:hover {
-  border-color: #386641;
-  background-color: #386641;
-  color: #f2e8cf;
-}
-
-/* Login button (unchanged behavior, kept for consistency) */
-.login-button {
-  width: 100%;
-  height: auto;
-
-  padding: 10px 25px 10px 25px;
-
-  border-style: solid;
-  border-radius: 15px;
-  border-color: #000000;
-  border-width: 2px;
-  text-decoration: none;
-  display: inline-block;
-  color: inherit;
-}
-
-.login-button:hover {
+.header-button:hover {
   border-color: #386641;
   background-color: #386641;
   color: #f2e8cf;
