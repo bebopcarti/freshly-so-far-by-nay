@@ -100,6 +100,7 @@ function Admin() {
 
   return (
     <>
+    <div class="admin-body">
       <section className="tambah">
         <h2>Tambah Produk</h2>
         <form onSubmit={handleSubmit}>
@@ -159,6 +160,7 @@ function Admin() {
           </table>
         </div>
       </section>
+    </div>
     </>
   );
 }

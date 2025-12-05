@@ -22,7 +22,7 @@ section{
 img {
     width: 100%;
 }
-body{
+admin-body{
     display: flex;
     justify-content: center;
     align-items: center;
