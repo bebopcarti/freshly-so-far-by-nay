@@ -1,7 +1,9 @@
 import './Home.css';
 import homeBanner from '../assets/hellofreshImage 2.jpg'; // KEEPING THE SPACE
+import { useAuth } from '../context/AuthContext';
 
 function Home() {
+    const { user } = useAuth();
     return (
         <div className="home-body">
 

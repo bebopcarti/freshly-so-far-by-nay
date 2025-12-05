@@ -6,8 +6,10 @@ import _1 from '../assets/desc-logo1.webp';
 import _2 from '../assets/desc-logo2.webp';
 import _3 from '../assets/desc-logo3.webp';
 import exploreImg from '../assets/hellofreshimage 4-cropped.png';
+import { useAuth } from '../context/AuthContext';
 
 function About() {
+    const { user } = useAuth();
     return (
         <div class="about-body">
             <div class="banner">

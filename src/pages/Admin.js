@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-import './admin.css'
+import './admin.css';
+import { useAuth } from '../context/AuthContext';
 
 function Admin() {
   const [nama, setNama] = useState("");
@@ -11,6 +12,8 @@ function Admin() {
   const [produk, setProduk] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
+
+  const { user } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import './Cart.css';
+import { useAuth } from "../context/AuthContext";
 
 function Cart() {
+
+    const { user } = useAuth();
 
     const item = {
         name: "Fresh Apples (1kg)",

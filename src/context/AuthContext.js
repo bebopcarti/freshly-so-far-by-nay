@@ -4,25 +4,25 @@ const AuthContext = createContext(null);
 
 
 // DEBUG 
-const test = 0;
-const testuser = {
-    userId: 1,
-    username: "usertest",
-    password: "test123",
-    email: "test@gmail.com",
-    role: "buyer",
-    createdAt: "2025-11-18"
-}
+// const test = 0;
+// const testuser = {
+//     userId: 1,
+//     username: "usertest",
+//     password: "test123",
+//     email: "test@gmail.com",
+//     role: "buyer",
+//     createdAt: "2025-11-18"
+// }
 // ----
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(() => {
-        // DEBUG
-        if (test == 1) {
-            return testuser
-        }
+        // // DEBUG
+        // if (test == 1) {
+        //     return testuser
+        // }
         // ---
         try {
             const storedUser = localStorage.getItem('user');
