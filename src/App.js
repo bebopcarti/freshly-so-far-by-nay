@@ -56,9 +56,9 @@ function App() {
             <Route path="/store" element={<><DynamicHeader /><Store /><Footer /></>} />
             <Route path="/about" element={<><DynamicHeader /><About /><Footer /></>} />
             <Route path="/cart" element={<><DynamicHeader /><Cart /><Footer /></>} />
-            <Route path={`/progress/:userId`} element={<><DynamicHeader /><Progress /><Footer /></>} />
+            <Route path={`/progress/:userId/:orderId`} element={<><DynamicHeader /><Progress /><Footer /></>} />
             <Route path="/transaction" element={<><DynamicHeader /><Transaction /></>} />
-            <Route path="/transaction-history" element={<><DynamicHeader /><TransactionHistory /></>} />
+            <Route path={"/transaction-history/:userId"} element={<><DynamicHeader /><TransactionHistory /></>} />
           </Routes>
         
         </div>
