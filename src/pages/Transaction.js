@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Transaction.css";
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,13 @@ function Transaction() {
         }
         navigate(`/progress/${user.userId}}`);
     };
+
+    useEffect(() => {
+        if (!user) {
+            navigate('/');
+        };
+    }, [user, navigate]);
+
 
     return (
         <div className="transaction-container">

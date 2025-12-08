@@ -4,15 +4,15 @@ const AuthContext = createContext(null);
 
 
 // DEBUG 
-// const test = 1;
-// const testuser = {
-//     userId: 0,
-//     username: "usertest",
-//     password: "test123",
-//     email: "test@gmail.com",
-//     role: "admin",
-//     createdAt: "2025-11-18"
-// }
+const test = 0;
+const testuser = {
+    userId: 1,
+    username: "usertest",
+    password: "test123",
+    email: "test@gmail.com",
+    role: "buyer",
+    createdAt: "2025-11-18"
+}
 // ----
 
 export const useAuth = () => useContext(AuthContext);

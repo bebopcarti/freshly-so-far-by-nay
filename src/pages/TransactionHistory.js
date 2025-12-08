@@ -20,7 +20,7 @@ function TransactionHistory() {
     }
     
     useEffect(() => {
-        if (!user) {return navigate('/login');}
+        if (!user) {return navigate('/');}
         const apiUrl = `http://localhost:3001/transaction-history/${user.userId}`
         fetch(apiUrl) 
             .then(response => response.json())

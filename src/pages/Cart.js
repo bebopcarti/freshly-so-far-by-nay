@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import './Cart.css';
 import { useAuth } from "../context/AuthContext";
 
 function Cart() {
-
+    const navigate = useNavigate();
     const { user } = useAuth();
 
     const item = {
@@ -11,6 +12,12 @@ function Cart() {
         price: 25000,
         img: "https://bf1af2.akinoncloudcdn.com/products/2025/02/08/146390/13a6f360-af4f-4410-804a-4048dda8d6f8_size3840_cropCenter.jpg"
     };
+
+    useEffect(() => {
+        if (!user) {
+            navigate('/');
+        };
+    }, [user, navigate]);
 
     return (
         <div className="cart-body">
