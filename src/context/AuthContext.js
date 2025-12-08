@@ -4,13 +4,13 @@ const AuthContext = createContext(null);
 
 
 // DEBUG 
-// const test = 0;
+// const test = 1;
 // const testuser = {
-//     userId: 1,
+//     userId: 0,
 //     username: "usertest",
 //     password: "test123",
 //     email: "test@gmail.com",
-//     role: "buyer",
+//     role: "admin",
 //     createdAt: "2025-11-18"
 // }
 // ----
