@@ -30,11 +30,11 @@ function Login() {
         // const testData = {
         //   "message": "Login berhasil",
         //   "user": {
-        //     "userId": 1,
+        //     "userId": 0,
         //     "username": "usertest",
         //     "password": "test123",
         //     "email": "test@gmail.com",
-        //     "role": "buyer",
+        //     "role": "admin",
         //     "createdAt": "2025-11-18"
         //   }
         // }
@@ -49,11 +49,11 @@ function Login() {
           localStorage.setItem("user", JSON.stringify(data.user));
           navigate('/');
           
-        // } else {
-        //   login(testData.user) // DEBUG
-        //   localStorage.setItem("user", JSON.stringify(testData.user)); // DEBUG
-        //   alert(testData.message);
-        //   navigate('/'); // DEBUG
+        } else {
+          // login(testData.user) // DEBUG
+          // localStorage.setItem("user", JSON.stringify(testData.user)); // DEBUG
+          alert(data.message);
+          // navigate('/'); // DEBUG
         }
       };
 

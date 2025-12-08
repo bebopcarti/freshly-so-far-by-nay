@@ -8,6 +8,8 @@ function TransactionHistory() {
     const [loading, setLoading] = useState(true);
     const { user } = useAuth();
     const navigate = useNavigate();
+    
+    const isAdmin = user && user.role === 'admin';
 
     const handleDetails = (orderId) => {
         { user ? 
@@ -16,9 +18,11 @@ function TransactionHistory() {
             navigate(`/login`);
         }
     }
-
+    
     useEffect(() => {
-        fetch('http://localhost:3001/transaction-history') 
+        if (!user) {return navigate('/login');}
+        const apiUrl = `http://localhost:3001/transaction-history/${user.userId}`
+        fetch(apiUrl) 
             .then(response => response.json())
             .then(data => {
                 if (data && Array.isArray(data.data)) {
@@ -34,48 +38,60 @@ function TransactionHistory() {
                 console.error("Error fetching data:", error);
                 setLoading(false);
             });
-    }, []);
+    }, [user, isAdmin, navigate]);
 
     // DEBUG
     // const testHistory = [
     //     {
     //         paymentId: 701,
     //         orderId: 5001,
-    //         method: 'Card',
-    //         paymentStatus: 'COMPLETED', 
-    //         paymentDate: '2025-11-20 10:45:00'
+    //         method: "Credit Card",
+    //         paymentStatus: "Completed",
+    //         paymentDate: "2025-11-20T10:00:00Z",
+    //         userId: 101
     //     },
     //     {
     //         paymentId: 702,
     //         orderId: 5002,
-    //         method: 'QRIS',
-    //         paymentStatus: 'COMPLETED', 
-    //         paymentDate: '2025-11-20 10:45:00'
+    //         method: "QRIS",
+    //         paymentStatus: "Pending",
+    //         paymentDate: "2025-11-25T14:30:00Z",
+    //         userId: 102
     //     },
     //     {
     //         paymentId: 703,
     //         orderId: 5003,
-    //         method: 'COD',
-    //         paymentStatus: 'COMPLETED', 
-    //         paymentDate: '2025-11-20 10:45:00'
-    //     }
-    // ]
+    //         method: "QRIS",
+    //         paymentStatus: "Failed",
+    //         paymentDate: "2025-11-28T09:15:00Z",
+    //         userId: 101
+    //     },
+    //     {
+    //         paymentId: 704,
+    //         orderId: 5004,
+    //         method: "Cash on Delivery",
+    //         paymentStatus: "Processing",
+    //         paymentDate: "2025-12-05T16:45:00Z",
+    //         userId: 103
+    //     },
+    // ];
     // ---
 
         return (
             <div className="transact-body"> 
                 <div className="transact-wrapper">
-                    <h1>Your Transaction History</h1>
+                    <h1>{isAdmin ? 'Admin: All Transaction History' : 'Your Transaction History'}</h1>
                     
                     <table className="history-table">
                         <thead>
                             <tr>
                                 <th>#</th>
+                                {isAdmin && <th>User ID</th>}
                                 <th>Order ID</th>
                                 <th>Method</th>
                                 <th>Date</th>
                                 <th>Status</th>
-                                <th>Details</th>
+                                {!isAdmin && <th>Details</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -86,17 +102,20 @@ function TransactionHistory() {
                                 // testHistory.map((item) => ( // DEBUG
                                     <tr key={item.paymentId}>
                                         <td>{item.paymentId}</td>
+                                        {isAdmin && <td>{item.userId}</td>}
                                         <td>{item.orderId}</td>
                                         <td>{item.method}</td>
                                         <td>{new Date(item.paymentDate).toLocaleDateString()}</td>
                                         <td>{item.paymentStatus}</td>
-                                        <td><button onClick={() => handleDetails(item.orderId)} class="details-button">Track Progress</button></td>
+                                        {!isAdmin && (
+                                            <td><button onClick={() => handleDetails(item.orderId)} class="details-button">Track Progress</button></td>
+                                        )}
                                     </tr>
                                 ))
                             )}
                             
                             {/* {!loading && testHistory.length === 0 && ( // DEBUG */}
-                            {!loading && history.length === 0 && (
+                            {!loading && history.length === 0 && ( 
                                 <tr><td colSpan="6">No transactions found.</td></tr>
                             )}
                         </tbody>

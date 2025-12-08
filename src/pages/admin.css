@@ -16,14 +16,14 @@ html{
     scroll-padding-top: 6rem;
     overflow-x: hidden;
 }
-section{
-    padding: 2rem 9%;
-}
 img {
     width: 100%;
 }
-admin-body{
+.admin-body{
+    height: 100vh;
+    margin-top: 4rem;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -52,11 +52,13 @@ admin-body{
 }
 
 .dashboard {
+    padding: 2rem 9%;
     max-width: 1000px;
     margin: 0 auto;
     padding: 40px;
 }
 .tambah {
+    padding: 2rem 9%;
     background-color: #A7C957;
     padding: 20px;
     border-radius: 10px;
@@ -101,22 +103,22 @@ admin-body{
     color: #386641;
     margin-bottom: 15px;
 }
-table {
+.admin-table {
     width: 100%;
     border-collapse: collapse;
 }
-th {
+.admin-table th {
     background-color: #6A994E;
     padding: 12px;
     text-align: left;
     color: white;
 }
-td {
+.admin-table td {
     padding: 10px 12px;
     border-bottom: 1px solid #dabd89;
     color: black;
 }
-td img {
+.admin-table td img {
     width: 60px;
     height: 60px;
     border-radius: 6px;

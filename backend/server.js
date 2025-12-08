@@ -273,31 +273,59 @@ app.post("/cart/getOrCreate", (req, res) => {
 // TRANSACTION HISTORY PAGE
 app.get('/transaction-history/:userId', (req, res) => {
   const userId = req.params.userId;
-  const sql = `
+
+  if (!userId) {
+    return res.status(400).json({ error: "Missing userId in path" });
+  }
+
+  let sql = ``;
+  let params = [];
+
+  if (userId === '0') {
+    sql = `
         SELECT 
+            p.paymentId, 
             p.orderId, 
             p.paymentStatus, 
-            p.paymentDate 
+            p.paymentDate,
+            p.method,
+            o.userId 
+        FROM 
+            pembayaran p
+        JOIN 
+            \`order\` o ON p.orderId = o.orderId
+        ORDER BY
+            p.paymentDate DESC;
+    `;
+  } else {
+    sql = `
+        SELECT 
+            p.paymentId, 
+            p.orderId, 
+            p.paymentStatus, 
+            p.paymentDate,
+            p.method,
+            o.userId 
         FROM 
             pembayaran p
         JOIN 
             \`order\` o ON p.orderId = o.orderId
         WHERE 
             o.userId = ?
+        ORDER BY
+            p.paymentDate DESC;
     `;
-
-  if (!userId) {
-        return res.status(400).json({ error: "Missing userId in path" });
-    }
+    params = [userId];
+  }
   
   db.query(sql, [userId], (err, data) => {
-        if (err) {
-            console.error("Database query error for transaction history:", err);
-            return res.status(500).json({ error: "Database query error" });
-        }
-        
-        return res.json(data);
-    });
+    if (err) {
+        console.error("Database query error for transaction history:", err);
+        return res.status(500).json({ error: "Database query error" });
+    }
+    
+    return res.json(data);
+  });
 });
 
 // PROGRESS PAGE

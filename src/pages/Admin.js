@@ -126,7 +126,7 @@ function Admin() {
       <section className="dashboard" id="dashboard">
         <div className="produk">
           <h2>Your Product</h2>
-          <table>
+          <table class="admin-table">
             <thead>
               <tr>
                 <th>Product</th>
