@@ -17,14 +17,56 @@ function Transaction() {
 
     const [showQR, setShowQR] = useState(false);
 
+    const [cartItems, setCartItems] = useState([]);
+    const [subtotal, setSubtotal] = useState(0);
+
     const { user } = useAuth();
 
+    useEffect(() => {
+        if (!user) return;
+    
+        // Ambil cartId user
+        fetch("http://localhost:3001/cart/getOrCreate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: user.userId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            const cartId = data.cartId;
+    
+            // Fetch item cart
+            fetch(`http://localhost:3001/cart/items/${cartId}`)
+                .then(res => res.json())
+                .then(items => {
+                    setCartItems(items);
+    
+                    const total = items.reduce((sum, item) => sum + item.subtotal, 0);
+                    setSubtotal(total);
+                });
+        });
+    }, [user]);
+
     const handleCheckout = () => {
-        if (method === "qris") {
-            setShowQR(true);
-            return;
-        }
-        navigate(`/progress/${user.userId}}`);
+        fetch("http://localhost:3001/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: user.userId,
+                method,
+                address,
+                deliveryFee: 10000,
+                totalAmount: subtotal + 10000
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (method === "qris") {
+                setShowQR(true);
+            } else {
+                navigate(`/progress/${data.orderId}`);
+            }
+        });
     };
 
     useEffect(() => {
@@ -130,14 +172,18 @@ function Transaction() {
 
                 <h2 className="section-title">Order Summary</h2>
 
-                <div className="order-item">
-                    <p><strong>Fresh Apples (1kg)</strong></p>
-                    <p>Quantity: 1</p>
-                    <p>Price: IDR 25,000</p>
-                </div>
+                {cartItems.map(item => (
+                    <div className="order-item" key={item.cartItemId}>
+                        <p><strong>{item.nama}</strong></p>
+                        <p>Quantity: {item.quantity}</p>
+                        <p>Price: IDR {item.harga.toLocaleString()}</p>
+                        <p>Subtotal: IDR {item.subtotal.toLocaleString()}</p>
+                    </div>
+                ))}
 
                 <div className="summary-box">
-                    <p><strong>Total:</strong> IDR 25,000</p>
+                    <p><strong>Delivery Fee:</strong> IDR 10000</p>
+                    <p><strong>Total:</strong> IDR {(subtotal + 10000).toLocaleString()}</p>
                 </div>
 
                 <h3>Delivery Address</h3>
@@ -164,7 +210,7 @@ function Transaction() {
                         <img src={qrisCode} alt="QRIS Code" className="qr-image" />
                         <button 
                             className="close-btn"
-                            onClick={() => navigate("/progress")}
+                            onClick={() => navigate(`/progress/${user.userId}`)}
                         >
                             Continue
                         </button>

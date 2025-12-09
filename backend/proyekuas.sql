@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 29, 2025 at 04:24 AM
+-- Generation Time: Dec 09, 2025 at 01:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,8 +39,9 @@ CREATE TABLE `keranjang` (
 --
 
 INSERT INTO `keranjang` (`cartId`, `userId`, `createdAt`, `updatedAt`) VALUES
-(1, 1, '2025-11-27', '2025-11-27'),
-(2, 1, '2025-11-27', '2025-11-27');
+(7, 3, '2025-12-09', '2025-12-09'),
+(8, 1, '2025-12-09', '2025-12-09'),
+(9, 4, '2025-12-09', '2025-12-09');
 
 -- --------------------------------------------------------
 
@@ -56,6 +57,14 @@ CREATE TABLE `keranjang_item` (
   `subtotal` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `keranjang_item`
+--
+
+INSERT INTO `keranjang_item` (`cartItemId`, `cartId`, `produkId`, `quantity`, `subtotal`) VALUES
+(7, 9, 8, 1, 19000),
+(8, 8, 9, 3, 66000);
+
 -- --------------------------------------------------------
 
 --
@@ -66,7 +75,6 @@ CREATE TABLE `order` (
   `orderId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `totalAmount` float NOT NULL,
-  `phone` varchar(50) NOT NULL,
   `address` text NOT NULL,
   `orderStatus` varchar(50) NOT NULL,
   `createdAt` date NOT NULL
@@ -101,17 +109,6 @@ CREATE TABLE `pembayaran` (
   `paymentDate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `pembayaran`
---
-
-INSERT INTO `pembayaran` (`paymentId`, `orderId`, `method`, `paymentStatus`, 'paymentDate') VALUES
-(701, 5001, 'Card', 'COMPLETED', '2025-11-20 10:45:00'),
-(702, 5002, 'QRIS', 'PENDING', '2025-11-21 11:30:00'),
-(703, 5003, 'QRIS', 'COMPLETED', '2025-12-05 07:15:00'),
-(704, 5004, 'COD', 'FAILED', '2025-12-05 09:30:00');
-
-
 -- --------------------------------------------------------
 
 --
@@ -121,20 +118,9 @@ INSERT INTO `pembayaran` (`paymentId`, `orderId`, `method`, `paymentStatus`, 'pa
 CREATE TABLE `pengantaran` (
   `deliveryId` int(11) NOT NULL,
   `orderId` int(11) NOT NULL,
-  `deliveryStatus` tinyint(1) NOT NULL,
+  `deliveryStatus` varchar(50) NOT NULL,
   `deliveryDate` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `pengantaran`
---
-
-INSERT INTO `pengantaran` (`deliveryId`, `orderId`, `deliveryStatus`, `deliveryDate`) VALUES
-(101, 5001, '0', '2025-11-20 14:30:00'),
-(102, 5002, '1', '2025-12-04 10:15:00'),
-(103, 5003, '2', '2025-12-05 08:00:00');
-(104, 5004, '3', '2025-12-06 09:00:00');
-
 
 -- --------------------------------------------------------
 
@@ -186,10 +172,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`userId`, `username`, `email`, `password`, `role`, `createdAt`) VALUES
-(0, 'Admin6', 'admin6@gmail.com', 'admin6', 'admin', '2025-11-19'),
 (1, 'usertest', 'test@gmail.com', 'test123', 'buyer', '2025-11-18'),
-(2, 'ppw6', 'ppw@gmail.com', 'ppw654', 'buyer', '2025-11-18'),
-(3, 'cobacoba', 'coba12@gmail.com', 'coba234', 'buyer', '2025-11-27');
+(2, 'Admin6', 'admin6@gmail.com', 'admin6', 'admin', '2025-11-19'),
+(3, 'ppw6', 'ppw@gmail.com', 'ppw654', 'buyer', '2025-11-18'),
+(4, 'cobacoba', 'coba12@gmail.com', 'coba234', 'buyer', '2025-11-27');
 
 --
 -- Indexes for dumped tables
@@ -259,13 +245,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `keranjang`
 --
 ALTER TABLE `keranjang`
-  MODIFY `cartId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `cartId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `keranjang_item`
 --
 ALTER TABLE `keranjang_item`
-  MODIFY `cartItemId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cartItemId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `order`

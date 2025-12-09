@@ -219,19 +219,22 @@ app.post("/cart/add", (req, res) => {
   const { cartId, produkId } = req.body;
 
   const checkSql = `
-    SELECT * FROM keranjang_item 
-    WHERE cartId = ? AND produkId = ?
+    SELECT ci.cartItemId, ci.quantity, p.harga 
+    FROM keranjang_item ci
+    JOIN produk p ON ci.produkId = p.produkId
+    WHERE ci.cartId = ? AND ci.produkId = ?
   `;
 
   db.query(checkSql, [cartId, produkId], (err, result) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) return res.status(500).json(err);
 
+    // PRODUK SUDAH ADA DI CART
     if (result.length > 0) {
       const newQty = result[0].quantity + 1;
-      const newSubtotal = newQty * result[0].subtotal / result[0].quantity;
+      const newSubtotal = newQty * result[0].harga;
 
       const updateSql = `
-        UPDATE keranjang_item 
+        UPDATE keranjang_item
         SET quantity = ?, subtotal = ?
         WHERE cartItemId = ?
       `;
@@ -239,24 +242,25 @@ app.post("/cart/add", (req, res) => {
       db.query(updateSql, [newQty, newSubtotal, result[0].cartItemId], () => {
         res.json({ message: "Quantity updated" });
       });
-    } else {
-      const getPriceSql = `SELECT harga FROM produk WHERE produkId = ?`;
 
-      db.query(getPriceSql, [produkId], (err2, product) => {
-        if (err2) return res.status(500).json({ error: err2 });
-
-        const price = product[0].harga;
-
-        const insertSql = `
-          INSERT INTO keranjang_item (cartId, produkId, quantity, subtotal)
-          VALUES (?, ?, 1, ?)
-        `;
-
-        db.query(insertSql, [cartId, produkId, price], () => {
-          res.json({ message: "Produk added to cart!" });
-        });
-      });
+      return;
     }
+
+    // PRODUK BELUM ADA DI CART
+    db.query("SELECT harga FROM produk WHERE produkId = ?", [produkId], (err2, prod) => {
+      if (err2) return res.status(500).json(err2);
+
+      const price = prod[0].harga;
+
+      const insertSql = `
+        INSERT INTO keranjang_item (cartId, produkId, quantity, subtotal)
+        VALUES (?, ?, 1, ?)
+      `;
+
+      db.query(insertSql, [cartId, produkId, price], () => {
+        res.json({ message: "Produk added to cart!" });
+      });
+    });
   });
 });
 
@@ -316,9 +320,10 @@ app.put("/cart/item/update", (req, res) => {
   const { cartItemId, quantity } = req.body;
 
   const sql = `
-    UPDATE keranjang_item 
-    SET quantity = ?, subtotal = quantity * harga
-    WHERE cartItemId = ?
+    UPDATE keranjang_item ci
+    JOIN produk p ON ci.produkId = p.produkId
+    SET ci.quantity = ?, ci.subtotal = quantity * p.harga
+    WHERE ci.cartItemId = ?
   `;
 
   db.query(sql, [quantity, cartItemId], (err) => {
@@ -333,6 +338,86 @@ app.delete("/cart/item/remove/:cartItemId", (req, res) => {
   db.query("DELETE FROM keranjang_item WHERE cartItemId = ?", [cartItemId], (err) => {
     if (err) return res.status(500).json(err);
     res.json({ success: true });
+  });
+});
+
+//TRANSACTION
+app.post("/checkout", (req, res) => {
+  const { userId, method, address } = req.body;
+
+  // 1. Ambil cartId
+  const getCartSql = "SELECT cartId FROM keranjang WHERE userId = ? LIMIT 1";
+
+  db.query(getCartSql, [userId], (err, cartResult) => {
+      if (err) return res.status(500).json(err);
+      if (cartResult.length === 0) return res.status(400).json({ error: "Cart not found" });
+
+      const cartId = cartResult[0].cartId;
+
+      // 2. Ambil isi cart
+      const getItemsSql = `
+          SELECT ci.*, p.harga 
+          FROM keranjang_item ci
+          JOIN produk p ON ci.produkId = p.produkId
+          WHERE ci.cartId = ?
+      `;
+
+      db.query(getItemsSql, [cartId], (err2, items) => {
+          if (err2) return res.status(500).json(err2);
+          if (items.length === 0) return res.status(400).json({ error: "Cart empty" });
+
+          // Hitung total
+          const totalAmount = items.reduce((sum, i) => sum + i.quantity * i.harga, 0);
+
+          // 3. Insert ke ORDER
+          const insertOrderSql = `
+              INSERT INTO order (userId, totalAmount, address, orderStatus, createdAt)
+              VALUES (?, ?, ?, 'PENDING', NOW())
+          `;
+
+          db.query(insertOrderSql, [userId, totalAmount, address], (err3, orderResult) => {
+              if (err3) return res.status(500).json(err3);
+
+              const orderId = orderResult.insertId;
+
+              // 4. Insert banyak item ke order_item
+              const orderItemsValues = items.map(i => [
+                  orderId,
+                  i.produkId,
+                  i.quantity,
+                  i.harga,
+                  i.quantity * i.harga
+              ]);
+
+              const insertOrderItemsSql = `
+                  INSERT INTO order_item (orderId, produkId, quantity, harga, subtotal)
+                  VALUES ?
+              `;
+
+              db.query(insertOrderItemsSql, [orderItemsValues], (err4) => {
+                  if (err4) return res.status(500).json(err4);
+
+                  // 5. Insert ke pembayaran
+                  const insertPaymentSql = `
+                      INSERT INTO pembayaran (orderId, method, paymentStatus, paymentDate)
+                      VALUES (?, ?, 'PENDING', NOW())
+                  `;
+
+                  db.query(insertPaymentSql, [orderId, method], (err5) => {
+                      if (err5) return res.status(500).json(err5);
+
+                      // 6. Hapus cart item
+                      db.query("DELETE FROM keranjang_item WHERE cartId = ?", [cartId]);
+
+                      res.json({
+                          message: "Checkout success",
+                          orderId,
+                          totalAmount
+                      });
+                  });
+              });
+          });
+      });
   });
 });
 
@@ -396,36 +481,32 @@ app.get('/transaction-history/:userId', (req, res) => {
 
 // PROGRESS PAGE
 app.get('/progress/:userId/:orderId', (req, res) => {
-    const userId = req.params.userId;
-    const orderId = req.params.orderId;
+  const { userId, orderId } = req.params;
 
-    if (!userId || !orderId) {
-        return res.status(400).json({ error: "Missing required parameters (userId or orderId)." });
-    }
+  const sql = `
+      SELECT 
+          orders.orderId,
+          orders.userId,
+          orders.totalAmount,
+          orders.orderStatus,
+          orders.deliveryStatus,
+          orders.deliveryDate,
+          orders.createdAt
+      FROM orders
+      WHERE orders.userId = ? AND orders.orderId = ?
+      LIMIT 1
+  `;
 
-    const sql = `
-        SELECT
-            o.orderId,
-            o.createdAt,
-            o.totalAmount,
-            o.orderStatus AS orderStatus,
-            d.deliveryDate,
-            d.deliveryStatus,
-            p.paymentStatus
-        FROM \`ORDER\` o
-        INNER JOIN DELIVERY d ON o.orderId = d.orderId
-        INNER JOIN PAYMENT p ON o.orderId = p.orderId
-        WHERE 
-            o.userId = ? 
-            AND o.orderId = ?
-    `;
-    db.query(sql, [userId, orderId], (err, data) => {
-        if (err) {
-            console.error("MySQL Tracking Error:", err);
-            return res.status(500).json({ 
-                error: "Failed to fetch tracking data." 
-            });
-        }
-        return res.json(data);
-    });
+  db.query(sql, [userId, orderId], (err, result) => {
+      if (err) {
+          console.error("DB error:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+
+      if (result.length === 0) {
+          return res.status(404).json({ error: "Order not found" });
+      }
+
+      res.json(result);
+  });
 });
