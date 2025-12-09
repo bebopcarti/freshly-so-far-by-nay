@@ -7,10 +7,92 @@ function Cart() {
     const navigate = useNavigate();
     const { user } = useAuth();
 
-    const item = {
-        name: "Fresh Apples (1kg)",
-        price: 25000,
-        img: "https://bf1af2.akinoncloudcdn.com/products/2025/02/08/146390/13a6f360-af4f-4410-804a-4048dda8d6f8_size3840_cropCenter.jpg"
+    const [cartId, setCartId] = useState(null);
+    const [cartItems, setCartItems] = useState([]);
+    const [subtotal, setSubtotal] = useState(0);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+            
+        fetch("http://localhost:3001/cart/getOrCreate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: user.userId })
+        })
+          .then(res => res.json())
+          .then(data => {
+            setCartId(data.cartId); 
+          });
+      }, []);
+
+    useEffect(() => {
+        if (!cartId) return;
+      
+        fetch(`http://localhost:3001/cart/items/${cartId}`)
+          .then(res => res.json())
+          .then(data => {
+            setCartItems(data);
+          });
+      }, [cartId]);
+
+      const handleIncrease = (item) => {
+        const newQty = item.quantity + 1;
+    
+        fetch("http://localhost:3001/cart/item/update", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                cartItemId: item.cartItemId,
+                quantity: newQty
+            })
+        })
+        .then(() => {
+            setCartItems(prev =>
+                prev.map(p =>
+                    p.cartItemId === item.cartItemId
+                        ? { ...p, quantity: newQty, subtotal: newQty * p.harga }
+                        : p
+                )
+            );
+        });
+    };
+
+    useEffect(() => {
+        const total = cartItems.reduce((sum, item) => sum + item.subtotal, 0);
+        setSubtotal(total);
+    }, [cartItems]);
+    
+    const handleDecrease = (item) => {
+        if (item.quantity <= 1) return;
+    
+        const newQty = item.quantity - 1;
+    
+        fetch("http://localhost:3001/cart/item/update", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                cartItemId: item.cartItemId,
+                quantity: newQty
+            })
+        })
+        .then(() => {
+            setCartItems(prev =>
+                prev.map(p =>
+                    p.cartItemId === item.cartItemId
+                        ? { ...p, quantity: newQty, subtotal: newQty * p.harga }
+                        : p
+                )
+            );
+        });
+    };
+    
+    const handleRemove = (cartItemId) => {
+        fetch(`http://localhost:3001/cart/item/remove/${cartItemId}`, {
+            method: "DELETE"
+        })
+        .then(() => {
+            setCartItems(prev => prev.filter(item => item.cartItemId !== cartItemId));
+        });
     };
 
     useEffect(() => {
@@ -29,26 +111,30 @@ function Cart() {
                 {/* ITEM */}
                 <div className="cart-items">
 
-                    <div className="cart-item">
-                        <img 
-                            src={item.img}
-                            alt={item.name}
-                            className="cart-item-img"
-                        />
+                    {cartItems.map(item => (
+                        <div className="cart-item" key={item.cartItemId}>
+        
+                            <img 
+                                src={`http://localhost:3001/uploads/${item.gambar}`}
+                                alt={item.nama}
+                                className="cart-item-img"
+                            />
 
-                        <div className="cart-item-details">
-                            <h2>{item.name}</h2>
-                            <p className="cart-price">Rp {item.price.toLocaleString()}</p>
+                            <div className="cart-item-details">
+                                <h2>{item.nama}</h2>
 
-                            <div className="cart-qty">
-                                <button>-</button>
-                                <span>1</span>
-                                <button>+</button>
+                                <p className="cart-price">Rp {item.harga.toLocaleString()}</p>
+
+                                <div className="cart-qty">
+                                    <button onClick={() => handleDecrease(item)}>-</button>
+                                    <span>{item.quantity}</span>
+                                    <button onClick={() => handleIncrease(item)}>+</button>
+                                </div>
+
+                                <button className="cart-remove" onClick={() => handleRemove(item.cartItemId)}>Remove</button>
                             </div>
-
-                            <button className="cart-remove">Remove</button>
                         </div>
-                    </div>
+                    ))}
 
                     <Link to="/store">
                         <button className="continue-shopping-btn">
@@ -63,7 +149,7 @@ function Cart() {
 
                     <div className="summary-row">
                         <span>Subtotal</span>
-                        <span>Rp {item.price.toLocaleString()}</span>
+                        <span>Rp {subtotal.toLocaleString()}</span>
                     </div>
 
                     <div className="summary-row">
@@ -73,7 +159,7 @@ function Cart() {
 
                     <div className="summary-total">
                         <span>Total</span>
-                        <span>Rp {(item.price + 10000).toLocaleString()}</span>
+                        <span>Rp {(subtotal + 10000).toLocaleString()}</span>
                     </div>
 
                     <Link to="/transaction">

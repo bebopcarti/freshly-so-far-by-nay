@@ -17,10 +17,6 @@ app.listen(3001, "0.0.0.0", () => {
     console.log("Server berjalan di port 3001");
 });
 
-// app.listen(3001, () => {
-//   console.log("Server berjalan di port 3001");
-// });
-
 //REGISTER - LOGIN
 app.post("/register", (req, res) => {
     const { email, username, password } = req.body;
@@ -56,27 +52,6 @@ app.post("/login", (req, res) => {
       res.status(401).json({ message: "Username atau password salah" });
     }
   });
-});
-
-app.post("/login", (req, res) => {
-    const { username, password } = req.body;
-  
-    const sql = "SELECT * FROM user WHERE username = ? AND password = ?";
-    db.query(sql, [username, password], (err, results) => {
-      if (err) {
-        console.log("Error:", err);
-        return res.status(500).json({ message: "Gagal login" });
-      }
-  
-      if (results.length > 0) {
-        res.json({
-          message: "Login berhasil",
-          user: results[0]
-        });
-      } else {
-        res.status(401).json({ message: "Username atau password salah" });
-      }
-    });
 });
 
 //ADMIN PAGE (ADD PRODUCT)
@@ -240,11 +215,80 @@ app.post("/produk/filter/all", (req, res) => {
   });
 });
 
+app.post("/cart/add", (req, res) => {
+  const { cartId, produkId } = req.body;
+
+  const checkSql = `
+    SELECT * FROM keranjang_item 
+    WHERE cartId = ? AND produkId = ?
+  `;
+
+  db.query(checkSql, [cartId, produkId], (err, result) => {
+    if (err) return res.status(500).json({ error: err });
+
+    if (result.length > 0) {
+      const newQty = result[0].quantity + 1;
+      const newSubtotal = newQty * result[0].subtotal / result[0].quantity;
+
+      const updateSql = `
+        UPDATE keranjang_item 
+        SET quantity = ?, subtotal = ?
+        WHERE cartItemId = ?
+      `;
+
+      db.query(updateSql, [newQty, newSubtotal, result[0].cartItemId], () => {
+        res.json({ message: "Quantity updated" });
+      });
+    } else {
+      const getPriceSql = `SELECT harga FROM produk WHERE produkId = ?`;
+
+      db.query(getPriceSql, [produkId], (err2, product) => {
+        if (err2) return res.status(500).json({ error: err2 });
+
+        const price = product[0].harga;
+
+        const insertSql = `
+          INSERT INTO keranjang_item (cartId, produkId, quantity, subtotal)
+          VALUES (?, ?, 1, ?)
+        `;
+
+        db.query(insertSql, [cartId, produkId, price], () => {
+          res.json({ message: "Produk added to cart!" });
+        });
+      });
+    }
+  });
+});
+
 //CART PAGE
+app.get("/cart/items/:cartId", (req, res) => {
+  const { cartId } = req.params;
+
+  const sql = `
+    SELECT 
+      ci.cartItemId,
+      ci.quantity,
+      ci.subtotal,
+      p.produkId,
+      p.nama,
+      p.harga,
+      p.gambar
+    FROM keranjang_item ci
+    JOIN produk p ON ci.produkId = p.produkId
+    WHERE ci.cartId = ?
+  `;
+
+  db.query(sql, [cartId], (err, result) => {
+    if (err) return res.status(500).json({ error: err });
+
+    res.json(result);
+  });
+});
+
+
 app.post("/cart/getOrCreate", (req, res) => {
   const { userId } = req.body;
 
-  // 1. Cek apakah user sudah punya cart
   db.query(
     "SELECT * FROM keranjang WHERE userId = ? LIMIT 1",
     [userId],
@@ -252,11 +296,9 @@ app.post("/cart/getOrCreate", (req, res) => {
       if (err) return res.status(500).json({ error: err });
 
       if (result.length > 0) {
-        // Sudah ada cart
         return res.json({ cartId: result[0].cartId });
       }
 
-      // 2. Kalau belum ada → buat baru
       db.query(
         "INSERT INTO keranjang (userId, createdAt, updatedAt) VALUES (?, NOW(), NOW())",
         [userId],
@@ -268,6 +310,30 @@ app.post("/cart/getOrCreate", (req, res) => {
       );
     }
   );
+});
+
+app.put("/cart/item/update", (req, res) => {
+  const { cartItemId, quantity } = req.body;
+
+  const sql = `
+    UPDATE keranjang_item 
+    SET quantity = ?, subtotal = quantity * harga
+    WHERE cartItemId = ?
+  `;
+
+  db.query(sql, [quantity, cartItemId], (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ success: true });
+  });
+});
+
+app.delete("/cart/item/remove/:cartItemId", (req, res) => {
+  const { cartItemId } = req.params;
+
+  db.query("DELETE FROM keranjang_item WHERE cartItemId = ?", [cartItemId], (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ success: true });
+  });
 });
 
 // TRANSACTION HISTORY PAGE

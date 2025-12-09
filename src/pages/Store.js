@@ -10,30 +10,6 @@ function Store() {
     const user = JSON.parse(localStorage.getItem("user") || "null");
 
     useEffect(() => {
-        if (!user) {
-            console.log("User belum login → Cart tidak dibuat");
-            return;
-        }
-
-        fetch("http://localhost:3001/cart/getOrCreate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: user.userId })
-        })
-        .then(res => res.json())
-        .then(data => console.log("Cart ID:", data.cartId))
-        .catch(err => console.log("Cart error:", err));
-    }, []);
-
-    // fetch("http://localhost:3001/cart/getOrCreate", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ userId: user.userId })
-    // })
-    // .then(res => res.json())
-    // .then(data => console.log("Cart ID:", data.cartId));
-
-    useEffect(() => {
         if (selectedCategories.length === 0) {
           fetch("http://localhost:3001/produk")
             .then(res => res.json())
@@ -99,6 +75,37 @@ function Store() {
         .then(data => setProduk(data));
     }, [selectedCategories, priceRange]);
 
+    const addToCart = async (produkId) => {
+        const user = JSON.parse(localStorage.getItem("user"));
+    
+        if (!user) {
+            alert("You must be logged in first to add to cart.");
+            return;
+        }
+        const resCart = await fetch("http://localhost:3001/cart/getOrCreate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: user.userId })
+        });
+        
+        const cartData = await resCart.json();
+        const cartId = cartData.cartId;
+
+        const resAdd = await fetch("http://localhost:3001/cart/add", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                cartId: cartId,
+                produkId: produkId
+            })
+        });
+    
+        const addData = await resAdd.json();
+        console.log(addData);
+        alert("Product added to cart!");
+    };
+    
+
     return (
         <>
         <div className="store-page">
@@ -146,7 +153,7 @@ function Store() {
                             />
                             <h3 className="product-title">{p.nama}</h3>
                             <div className="price-box">IDR {p.harga.toLocaleString()}</div>
-                            <button className="add-cart-btn">Add to Cart</button>
+                            <button className="add-cart-btn" onClick={() => addToCart(p.produkId)}>Add to Cart</button>
                         </div>
                     ))}
 
