@@ -10,9 +10,10 @@ function Cart() {
     const [cartId, setCartId] = useState(null);
     const [cartItems, setCartItems] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
-
+    
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) {return navigate('/');}
+        // const user = JSON.parse(localStorage.getItem("user"));
             
         fetch("http://localhost:3001/cart/getOrCreate", {
           method: "POST",
@@ -50,12 +51,13 @@ function Cart() {
             setCartItems(prev =>
                 prev.map(p =>
                     p.cartItemId === item.cartItemId
-                        ? { ...p, quantity: newQty, subtotal: newQty * p.harga }
+                    ? { ...p, quantity: newQty, subtotal: newQty * p.harga }
                         : p
                 )
             );
         });
     };
+
 
     useEffect(() => {
         const total = cartItems.reduce((sum, item) => sum + item.subtotal, 0);
@@ -66,7 +68,7 @@ function Cart() {
         if (item.quantity <= 1) return;
     
         const newQty = item.quantity - 1;
-    
+        
         fetch("http://localhost:3001/cart/item/update", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -95,12 +97,7 @@ function Cart() {
         });
     };
 
-    useEffect(() => {
-        if (!user) {
-            navigate('/');
-        };
-    }, [user, navigate]);
-
+    
     return (
         <div className="cart-body">
 

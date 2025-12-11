@@ -20,15 +20,11 @@ img {
     width: 100%;
 }
 .admin-body{
-    height: 100vh;
-    margin-top: 4rem;
+    padding-top: 10rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-size: cover;
-    background-position: center;
     background-color: #f2e8cf;
 }
 
@@ -52,12 +48,14 @@ img {
 }
 
 .dashboard {
+    display: flex;
     padding: 2rem 9%;
     max-width: 1000px;
     margin: 0 auto;
     padding: 40px;
 }
 .tambah {
+    display: flex;
     padding: 2rem 9%;
     background-color: #A7C957;
     padding: 20px;

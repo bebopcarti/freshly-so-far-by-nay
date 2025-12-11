@@ -8,13 +8,13 @@ import _4 from '../assets/check-white.png';
 
 const getProgressWidth = (status) => {
     switch (status) {
-        case 0:
+        case 'PLACED':
             return 13; // Order Placed
-        case 1:
+        case 'PACKAGED':
             return 38; // Packaged
-        case 2:
+        case 'OTW':
             return 62; // On the Way
-        case 3:
+        case 'DELIVERED':
             return 100; // Delivered
     }
 };
@@ -86,22 +86,22 @@ function Progress() {
                         <div className="progress-line prog-gray"></div>
                         <div className="progress-line prog-green" style={{width: `${deliveryProgressWidth}%`}}></div>
                         <div className="progress-step">
-                            <div className={`img-border ${orderData.deliveryStatus >= 0 ? 'active' : 'inactive'}`}>
+                            <div className={`img-border ${deliveryProgressWidth >= 13 ? 'active' : 'inactive'}`}>
                                 <img src={_1}></img>
                             </div>
                         </div>
                         <div className="progress-step">
-                            <div className={`img-border ${orderData.deliveryStatus >= 1 ? 'active' : 'inactive'}`}>
+                            <div className={`img-border ${deliveryProgressWidth >= 38 ? 'active' : 'inactive'}`}>
                                 <img src={_2}></img>
                             </div>
                         </div>
                         <div className="progress-step">
-                            <div className={`img-border ${orderData.deliveryStatus >= 2 ? 'active' : 'inactive'}`}>
+                            <div className={`img-border ${deliveryProgressWidth >= 62 ? 'active' : 'inactive'}`}>
                                 <img src={_3}></img>
                             </div>
                         </div>
                         <div className="progress-step">
-                            <div className={`img-border ${orderData.deliveryStatus >= 3 ? 'active' : 'inactive'}`}>
+                            <div className={`img-border ${deliveryProgressWidth >= 100 ? 'active' : 'inactive'}`}>
                                 <img src={_4}></img>
                             </div>
                         </div>

@@ -4,6 +4,7 @@ const db = require("./db");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
+const { type } = require("os");
 
 app.use(cors());
 
@@ -371,8 +372,8 @@ app.post("/checkout", (req, res) => {
 
           // 3. Insert ke ORDER
           const insertOrderSql = `
-              INSERT INTO order (userId, totalAmount, address, orderStatus, createdAt)
-              VALUES (?, ?, ?, 'PENDING', NOW())
+              INSERT INTO \`order\` (userId, totalAmount, address, orderStatus, createdAt)
+              VALUES (?, ?, ?, 'PLACED', NOW())
           `;
 
           db.query(insertOrderSql, [userId, totalAmount, address], (err3, orderResult) => {
@@ -399,21 +400,30 @@ app.post("/checkout", (req, res) => {
 
                   // 5. Insert ke pembayaran
                   const insertPaymentSql = `
-                      INSERT INTO pembayaran (orderId, method, paymentStatus, paymentDate)
-                      VALUES (?, ?, 'PENDING', NOW())
+                    INSERT INTO pembayaran (orderId, method, paymentStatus, paymentDate)
+                    VALUES (?, ?, 'PAYED', NOW())
                   `;
 
                   db.query(insertPaymentSql, [orderId, method], (err5) => {
-                      if (err5) return res.status(500).json(err5);
+                    if (err5) return res.status(500).json(err5);
+
+                    const insertDeliverySql = `
+                      INSERT INTO pengantaran (orderId, deliveryStatus, deliveryDate)
+                      VALUES (?, 'PLACED', NOW())
+                    `;
+
+                    db.query(insertDeliverySql, [orderId], (err6) => {
+                      if (err6) {console.error("Delivery insert failed", err6);}
 
                       // 6. Hapus cart item
                       db.query("DELETE FROM keranjang_item WHERE cartId = ?", [cartId]);
 
                       res.json({
-                          message: "Checkout success",
-                          orderId,
-                          totalAmount
+                        message: "Checkout success",
+                        orderId,
+                        totalAmount
                       });
+                    });
                   });
               });
           });
@@ -432,7 +442,7 @@ app.get('/transaction-history/:userId', (req, res) => {
   let sql = ``;
   let params = [];
 
-  if (userId === '0') {
+  if (userId === '2') {
     sql = `
         SELECT 
             p.paymentId, 
@@ -484,17 +494,18 @@ app.get('/progress/:userId/:orderId', (req, res) => {
   const { userId, orderId } = req.params;
 
   const sql = `
-      SELECT 
-          orders.orderId,
-          orders.userId,
-          orders.totalAmount,
-          orders.orderStatus,
-          orders.deliveryStatus,
-          orders.deliveryDate,
-          orders.createdAt
-      FROM orders
-      WHERE orders.userId = ? AND orders.orderId = ?
-      LIMIT 1
+    SELECT 
+      o.orderId,
+      o.userId,
+      o.totalAmount,
+      o.orderStatus,
+      p.deliveryStatus,
+      p.deliveryDate,
+      o.createdAt
+    FROM \`order\` o
+    JOIN \`pengantaran\` p ON o.orderId = p.orderId
+    WHERE o.userId = ? AND o.orderId = ?
+    LIMIT 1
   `;
 
   db.query(sql, [userId, orderId], (err, result) => {

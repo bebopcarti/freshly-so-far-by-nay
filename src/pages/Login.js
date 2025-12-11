@@ -50,6 +50,7 @@ function Login() {
           navigate('/');
           
         } else {
+
           // login(testData.user) // DEBUG
           // localStorage.setItem("user", JSON.stringify(testData.user)); // DEBUG
           alert(data.message);

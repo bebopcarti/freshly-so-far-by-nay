@@ -64,7 +64,7 @@ function Transaction() {
             if (method === "qris") {
                 setShowQR(true);
             } else {
-                navigate(`/progress/${data.orderId}`);
+                navigate(`/transaction-history/${user.userId}`);
             }
         });
     };
@@ -210,7 +210,7 @@ function Transaction() {
                         <img src={qrisCode} alt="QRIS Code" className="qr-image" />
                         <button 
                             className="close-btn"
-                            onClick={() => navigate(`/progress/${user.userId}`)}
+                            onClick={() => navigate(`/transaction-history/${user.userId}`)}
                         >
                             Continue
                         </button>

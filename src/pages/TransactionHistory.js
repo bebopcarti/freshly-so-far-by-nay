@@ -25,13 +25,7 @@ function TransactionHistory() {
         fetch(apiUrl) 
             .then(response => response.json())
             .then(data => {
-                if (data && Array.isArray(data.data)) {
-                    setHistory(data.data);
-                } else if (data && Array.isArray(data.records)) {
-                    setHistory(data.records);
-                } else {
-                    setHistory([]); 
-                }
+                setHistory(data);
                 setLoading(false);
             })
             .catch(error => {
@@ -40,43 +34,7 @@ function TransactionHistory() {
             });
     }, [user, isAdmin, navigate]);
 
-    // DEBUG
-    // const testHistory = [
-    //     {
-    //         paymentId: 701,
-    //         orderId: 5001,
-    //         method: "Credit Card",
-    //         paymentStatus: "Completed",
-    //         paymentDate: "2025-11-20T10:00:00Z",
-    //         userId: 101
-    //     },
-    //     {
-    //         paymentId: 702,
-    //         orderId: 5002,
-    //         method: "QRIS",
-    //         paymentStatus: "Pending",
-    //         paymentDate: "2025-11-25T14:30:00Z",
-    //         userId: 102
-    //     },
-    //     {
-    //         paymentId: 703,
-    //         orderId: 5003,
-    //         method: "QRIS",
-    //         paymentStatus: "Failed",
-    //         paymentDate: "2025-11-28T09:15:00Z",
-    //         userId: 101
-    //     },
-    //     {
-    //         paymentId: 704,
-    //         orderId: 5004,
-    //         method: "Cash on Delivery",
-    //         paymentStatus: "Processing",
-    //         paymentDate: "2025-12-05T16:45:00Z",
-    //         userId: 103
-    //     },
-    // ];
-    // ---
-
+    console.log(history);
         return (
             <div className="transact-body"> 
                 <div className="transact-wrapper">
