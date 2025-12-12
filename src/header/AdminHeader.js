@@ -20,7 +20,6 @@ function Header() {
             <ul className="nav-list">
               <li><a href="/"><img class="logo-img" src={logo} alt="Freshly Logo"/></a></li>
               <li><a href="/">Admin Dashboard</a></li>
-              <li><a href="/store">Product</a></li>
               <li><a href="/transaction-history/0">Transaction History</a></li>
             </ul>
           </nav>

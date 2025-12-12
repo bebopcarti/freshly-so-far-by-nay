@@ -1,6 +1,7 @@
 import './Progress.css';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import _2 from '../assets/box-white.png';
 import _3 from '../assets/cargo-truck-white.png';
 import _1 from '../assets/shopping-cart-white.png';
@@ -16,6 +17,8 @@ const getProgressWidth = (status) => {
             return 62; // On the Way
         case 'DELIVERED':
             return 100; // Delivered
+        default:
+            return 0;
     }
 };
 
@@ -23,13 +26,18 @@ function Progress() {
     const { userId, orderId } = useParams();
     const [ orderData, setOrders ] = useState([]);
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const deliveryProgressWidth = orderData ? getProgressWidth(orderData.deliveryStatus) : 0;
     
     useEffect(() => {
+        if (!user) {
+            navigate('/');
+            return;
+        }
         if (!userId) {
             console.error("User ID is missing from the URL.");
-            navigate(`/login`)
+            navigate(`/login`);
             return;
         }
         if (!orderId) {
