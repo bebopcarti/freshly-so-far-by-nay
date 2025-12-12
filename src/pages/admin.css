@@ -11,12 +11,11 @@
     transition: .2s linear;
 }
 html{
-    font-size: 62.5%;
     scroll-behavior: smooth;
     scroll-padding-top: 6rem;
     overflow-x: hidden;
 }
-img {
+.admin-body img {
     width: 100%;
 }
 .admin-body{

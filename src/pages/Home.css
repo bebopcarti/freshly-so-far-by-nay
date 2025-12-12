@@ -17,6 +17,7 @@
 
 .home-banner-img {
   width: 100%;
+  margin-top: 5rem;
   height: 65vh;
   object-fit: cover;
   filter: none !important;
@@ -24,7 +25,7 @@
 
 .home-banner-text {
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 15%;
   transform: translateY(-50%);
   color: white;
