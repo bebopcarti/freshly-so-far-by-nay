@@ -24,6 +24,7 @@ a {
   flex-direction: column;
   align-items: center;
   width: 80%;
+  height: max-content;
   background-color: #A7C957;
   border-radius: 50px;
   padding: 3rem 5rem;
