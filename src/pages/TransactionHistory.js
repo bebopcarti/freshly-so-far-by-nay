@@ -5,6 +5,8 @@ import './TransactionHistory.css';
 
 function TransactionHistory() {
     const [history, setHistory] = useState([]);
+    const [orders, setOrders] = useState([]);
+    const [showOrders, setBool] = useState(false);
     const [loading, setLoading] = useState(true);
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -34,7 +36,17 @@ function TransactionHistory() {
             });
     }, [user, isAdmin, navigate]);
 
-    console.log(history);
+    const getOrders = (orderId) => {
+        fetch(`http://localhost:3001/transaction-history/${user.userId}/${orderId}`)
+            .then(response => response.json())
+            .then(data => {
+                setOrders(data);
+                setBool(true);
+            })
+            .catch(error => {
+                console.error("Error fetching orders:", error);
+            })
+        };
         return (
             <div className="transact-body"> 
                 <div className="transact-wrapper">
@@ -50,11 +62,12 @@ function TransactionHistory() {
                                 <th>Date</th>
                                 <th>Status</th>
                                 {!isAdmin && <th>Details</th>}
+                                <th>Items</th>
                             </tr>
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan="6">Loading history...</td></tr>
+                                <tr><td colSpan="7">Loading history...</td></tr>
                             ) : (
                                 history.map((item) => (
                                 // testHistory.map((item) => ( // DEBUG
@@ -68,16 +81,43 @@ function TransactionHistory() {
                                         {!isAdmin && (
                                             <td><button onClick={() => handleDetails(item.orderId)} class="details-button">Track Progress</button></td>
                                         )}
+                                        <td><button onClick={() => getOrders(item.orderId)} class="details-button">See Items</button></td>
                                     </tr>
                                 ))
                             )}
                             
                             {/* {!loading && testHistory.length === 0 && ( // DEBUG */}
                             {!loading && history.length === 0 && ( 
-                                <tr><td colSpan="6">No transactions found.</td></tr>
+                                <tr><td colSpan="7">No transactions found.</td></tr>
                             )}
                         </tbody>
                     </table>
+
+                    {showOrders && (
+                        <div className="order-popup">
+                            <div className="order-content">
+                                <table class="orders-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Amount</th>
+                                            <th>Product</th>
+                                            <th>Subtotal</th>
+                                        </tr>                                    
+                                    </thead>
+                                    <tbody>
+                                        {orders.map((item) => (
+                                            <tr key={item.produkId}>
+                                                <td>{item.quantity}x</td>
+                                                <td>{item.nama}</td>
+                                                <td>{item.subtotal}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button className="details-button" onClick={() => setBool(false)}>Close</button>
+                        </div>
+                    )}
                 </div>
             </div>
         );

@@ -18,7 +18,7 @@ function About() {
             </div>
             <div class="about-sections about-desc">
                 <h1>Delivery of Fresh Food</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Freshly is a website-based store focused on selling groceries. This website aims to provide practical and convenient solutions. We offer fresh, guaranteed-quality groceries. With delivery services and cashless payment options, we ensure a pleasant shopping experience for our customers.</p>
             </div>
             <div class="about-sections about-adv">
                 <h1>What we bring to your table</h1>
@@ -50,7 +50,6 @@ function About() {
                     <div class="person-card-details">
                         <h1>Ahmad Hanif Naufal Jamil</h1>
                         <p>(1313624037)</p>
-                        <p>Other details</p>
                     </div>
                 </div>
                 <div class="person-card" style={{flexDirection: "row-reverse"}}>
@@ -60,7 +59,6 @@ function About() {
                     <div class="person-card-details">
                         <h1>Rizky Wulan Purnamasari</h1>
                         <p>(1313624052)</p>
-                        <p>Other details</p>
                     </div>
                 </div>
                 <div class="person-card">
@@ -70,7 +68,6 @@ function About() {
                     <div class="person-card-details">
                         <h1>Bara Juang Indonesiano</h1>
                         <p>(1313624078)</p>
-                        <p>Other details</p>
                     </div>
                 </div>
             </div>

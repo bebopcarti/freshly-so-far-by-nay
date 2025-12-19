@@ -58,7 +58,7 @@ app.post("/login", (req, res) => {
 //ADMIN PAGE (ADD PRODUCT)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // simpan di folder uploads/
+    cb(null, "backend/uploads/"); // simpan di folder uploads/
   },
   filename: (req, file, cb) => {
     const uniqueName = Date.now() + path.extname(file.originalname);
@@ -485,6 +485,30 @@ app.get('/transaction-history/:userId', (req, res) => {
         return res.status(500).json({ error: "Database query error" });
     }
     
+    return res.json(data);
+  });
+});
+
+app.get('/transaction-history/:userId/:orderId', (req, res) => {
+  const { userId, orderId } = req.params;
+
+  const sql = `
+        SELECT 
+            p.nama, 
+            oi.produkId, 
+            oi.quantity, 
+            oi.harga, 
+            oi.subtotal
+        FROM order_item oi
+        INNER JOIN produk p ON oi.produkId = p.produkId
+        WHERE oi.orderId = ?
+    `;
+  
+  db.query(sql, [orderId], (err, data) => {
+  if (err) {
+      console.error("Error fetching order items: ", err);
+      return res.status(500).json({ error: "Failed to fetch order items",orderId});
+  }
     return res.json(data);
   });
 });

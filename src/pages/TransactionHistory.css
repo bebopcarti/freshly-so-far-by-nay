@@ -15,7 +15,7 @@ a {
   justify-content: center;
   background-color: #f2e8cf;
   width: 100%;
-  height: 100vh;
+  height: fit-content;
   padding: 4rem 0;
 }
 
@@ -24,7 +24,7 @@ a {
   flex-direction: column;
   align-items: center;
   width: 80%;
-  height: max-content;
+  height: fit-content;
   background-color: #A7C957;
   border-radius: 50px;
   padding: 3rem 5rem;
@@ -71,4 +71,58 @@ a {
   border-color: #386641;
   background-color: #386641;
   color: #f2e8cf;
+}
+
+.order-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.order-popup .details-button {
+  position: fixed;
+  top: 90%;
+  width: 25%;
+  background: #386641;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.order-content {
+  background: #FFFBEA;
+  padding: 2rem;
+  width: fit-content;
+  height: 75%;
+  overflow-y: scroll;
+  border-radius: 0;
+  border: 2px solid #A7C957;
+  text-align: center;
+}
+
+.orders-table {
+  border-collapse: collapse;
+}
+
+.orders-table th {
+  padding: 2rem;
+  color: white;
+  background-color: #386641;
+  border: 1px solid #303030;
+}
+
+.orders-table td {
+  padding: 2rem;
+  text-align: center;
+  background-color: white;   
+  border: 1px solid #303030;
 }
