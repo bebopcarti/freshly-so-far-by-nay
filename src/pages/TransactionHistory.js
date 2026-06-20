@@ -77,7 +77,15 @@ function TransactionHistory() {
                                         <td>{item.orderId}</td>
                                         <td>{item.method}</td>
                                         <td>{new Date(item.paymentDate).toLocaleDateString()}</td>
-                                        <td>{item.paymentStatus}</td>
+                                        <td>
+                                            {/* {item.paymentStatus} */}
+                                            <select class="prog-details-button">
+                                                <option>Placed</option>
+                                                <option>Packaged</option>
+                                                <option>On the Way</option>
+                                                <option>Delivered</option>
+                                            </select>
+                                        </td>
                                         {!isAdmin && (
                                             <td><button onClick={() => handleDetails(item.orderId)} class="details-button">Track Progress</button></td>
                                         )}

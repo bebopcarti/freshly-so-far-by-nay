@@ -25,6 +25,7 @@ function Header() {
           </nav>
 
           <div className="account-info">
+            <button class="header-button">View Analytics</button>
             <button onClick={handleLogout} class="logout header-button">Logout</button>
           </div>
           

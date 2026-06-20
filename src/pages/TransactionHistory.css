@@ -67,6 +67,18 @@ a {
   transition: background-color 0.18s, border-color 0.18s, color 0.18s;
 }
 
+.prog-details-button {
+  display: inline-block;
+  padding: 8px 18px;
+  border: 1px solid #000000;
+  border-radius: 15px;
+  background: transparent;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  /* transition: background-color 0.18s, border-color 0.18s, color 0.18s; */
+}
+
 .details-button:hover {
   border-color: #386641;
   background-color: #386641;

@@ -17,6 +17,7 @@ import Transaction from './pages/Transaction.js';
 import Progress from './pages/Progress.js';
 import TransactionHistory from './pages/TransactionHistory.js';
 import Admin from './pages/Admin.js';
+// import Details from './pages/Details.js';
 // ------------ ~
 
 import './App.css'; // Main CSS (bisa override CSS page)
@@ -54,6 +55,9 @@ function App() {
             <Route path="/register" element={<><Header2/><Register /></>} />
             <Route path="/" element={<HomeOrAdmin />} />
             <Route path="/store" element={<><DynamicHeader /><Store /><Footer /></>} />
+
+            {/* <Route path="/store/:produkId" element={<><DynamicHeader /><Details /><Footer /></>} /> */}
+
             <Route path="/about" element={<><DynamicHeader /><About /><Footer /></>} />
             <Route path="/cart" element={<><DynamicHeader /><Cart /><Footer /></>} />
             <Route path={`/progress/:userId/:orderId`} element={<><DynamicHeader /><Progress /><Footer /></>} />
