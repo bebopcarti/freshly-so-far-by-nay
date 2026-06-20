@@ -39,7 +39,6 @@ CREATE TABLE `keranjang` (
 --
 
 INSERT INTO `keranjang` (`cartId`, `userId`, `createdAt`, `updatedAt`) VALUES
-(7, 3, '2025-12-09', '2025-12-09'),
 (8, 1, '2025-12-09', '2025-12-09'),
 (9, 4, '2025-12-09', '2025-12-09');
 
@@ -177,6 +176,50 @@ INSERT INTO `user` (`userId`, `username`, `email`, `password`, `role`, `createdA
 (3, 'ppw6', 'ppw@gmail.com', 'ppw654', 'buyer', '2025-11-18'),
 (4, 'cobacoba', 'coba12@gmail.com', 'coba234', 'buyer', '2025-11-27');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `favorite`
+--
+
+CREATE TABLE `favorite` (
+  `favId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `produkId` int(11) NOT NULL,
+  `createdAt` date NOT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `favorite`
+--
+
+-- INSERT INTO `favorite` (`favId`, `userId`, `produkId`, `createdAt`) VALUES
+-- ()
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `review`
+--
+
+CREATE TABLE `review` (
+  `reviewId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `produkId` int(11) NOT NULL,
+  `rating` int(11) NOT NULL,
+  `komentar` text NOT NULL,
+  `createdAt` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `review`
+--
+
+-- INSERT INTO `review` (`reviewId`, `userIde`, `produkId`, `rating`, `komentar`, `createdAt`) VALUES
+-- ()
+
+-- --------------------------------------------------------
+
 --
 -- Indexes for dumped tables
 --
@@ -238,6 +281,22 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`userId`);
 
 --
+-- Indexes for table `favorite`
+--
+ALTER TABLE `favorite`
+  ADD PRIMARY KEY (`favId`);
+  ADD KEY `userId` (`userId`);
+  ADD KEY `produkId` (`produkId`);
+
+--
+-- Indexes for table `review`
+--
+ALTER TABLE `review`
+  ADD PRIMARY KEY (`reviewId`);
+  ADD KEY `userId` (`userId`);
+  ADD KEY `produkId` (`produkId`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -290,6 +349,18 @@ ALTER TABLE `user`
   MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `favorite`
+--
+ALTER TABLE `favorite`
+  MODIFY `favId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `review`
+--
+ALTER TABLE `review`
+  MODIFY `reviewId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -330,6 +401,22 @@ ALTER TABLE `pembayaran`
 --
 ALTER TABLE `pengantaran`
   ADD CONSTRAINT `pengantaran_ibfk_1` FOREIGN KEY (`orderId`) REFERENCES `order` (`orderId`);
+COMMIT;
+
+--
+-- Constraints for table `favorite`
+--
+ALTER TABLE `favorite`
+  ADD CONSTRAINT `favorite_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
+  ADD CONSTRAINT `favorite_ibfk_2` FOREIGN KEY (`produkId`) REFERENCES `produk` (`produkId`);
+COMMIT;
+
+--
+-- Constraints for table `review`
+--
+ALTER TABLE `review`
+  ADD CONSTRAINT `review_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`userId`);
+  ADD CONSTRAINT `review_ibfk_2` FOREIGN KEY (`produkId`) REFERENCES `produk` (`produkId`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
