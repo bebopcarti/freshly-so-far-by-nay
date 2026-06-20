@@ -186,7 +186,7 @@ CREATE TABLE `favorite` (
   `favId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `produkId` int(11) NOT NULL,
-  `createdAt` date NOT NULL,
+  `createdAt` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
