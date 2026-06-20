@@ -18,7 +18,7 @@ app.listen(3001, "0.0.0.0", () => {
     console.log("Server berjalan di port 3001");
 });
 
-//REGISTER - LOGIN
+// === REGISTER - LOGIN ===
 app.post("/register", (req, res) => {
     const { email, username, password } = req.body;
   
@@ -54,8 +54,9 @@ app.post("/login", (req, res) => {
     }
   });
 });
+// --------------
 
-//ADMIN PAGE (ADD PRODUCT)
+// === ADMIN PAGE === (ADD PRODUCT)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "backend/uploads/"); // simpan di folder uploads/
@@ -134,7 +135,37 @@ app.post("/edit-produk/:id", (req, res, next) => {
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-//STORE PAGE
+// ADMIN UPDATE ORDER STATUS
+app.put("/order-status", (req, res) => {
+  const { orderId, status } = req.body
+
+  const sql = `
+    UPDATE pengantaran p
+    SET p.deliveryStatus = ?
+    WHERE p.orderId = ?
+  `
+
+  db.query(sql, [orderId, status], (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ success: true });
+  });
+})
+
+// ADMIN ANALYTICS
+app.get("/analytics", (req, res) => {
+  const sql = ``
+
+  db.query(sql, [], (err, result) => {
+    if (err) {
+      console.error("Error fetching order items: ", err);
+      return res.status(500).json({ error: "Failed to fetch"});
+    }
+    return res.json(result)
+  })
+})
+// --------------
+
+// === STORE PAGE ===
 app.get("/produk/kategori/:kategori", (req, res) => {
   const kategori = req.params.kategori;
 
@@ -204,9 +235,9 @@ app.post("/produk/filter/all", (req, res) => {
       sql += ` AND kategori IN (${placeholders})`;
       params.push(...categories);
   }
-
+  
   sql += " ORDER BY produkId DESC";
-
+  
   db.query(sql, params, (err, result) => {
       if (err) {
           console.log(err);
@@ -225,7 +256,7 @@ app.post("/cart/add", (req, res) => {
     JOIN produk p ON ci.produkId = p.produkId
     WHERE ci.cartId = ? AND ci.produkId = ?
   `;
-
+  
   db.query(checkSql, [cartId, produkId], (err, result) => {
     if (err) return res.status(500).json(err);
 
@@ -256,16 +287,123 @@ app.post("/cart/add", (req, res) => {
       const insertSql = `
         INSERT INTO keranjang_item (cartId, produkId, quantity, subtotal)
         VALUES (?, ?, 1, ?)
-      `;
-
-      db.query(insertSql, [cartId, produkId, price], () => {
+        `;
+        
+        db.query(insertSql, [cartId, produkId, price], () => {
         res.json({ message: "Produk added to cart!" });
       });
     });
   });
 });
+// --------------
 
-//CART PAGE
+// === ITEM DETAILS PAGE ===
+app.get("/store/:produkId", (req, res) => {
+  const { produkId } = req.params;
+
+  const sql = `
+    SELECT 
+      p.nama,
+      p.harga,
+      p.gambar
+    FROM produk p
+    WHERE p.produkId = ?
+  `;
+
+  db.query(sql, [produkId], (err, result) => {
+    if (err) return res.status(500).json({ error: err });
+
+    res.json(result);
+  })
+})
+
+// ITEM REVIEW
+app.get("/review/:produkId", (req, res) => {
+  const {produkId} = req.params;
+
+  const sql = `
+    SELECT
+      komentar
+      AVG(rating)
+    FROM review
+    WHERE review.produkId = ?
+  `;
+
+  db.query(sql, [produkId], (err, result) => {
+    if (err) {
+      console.error("DB error:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+      res.json(result);
+  });
+})
+
+app.post("/review/create", (req, res) => {
+  const { produkId, userId, rating, komentar } = req.body;
+
+  const sql = `
+    INSERT INTO review (userId, produkId, rating, komentar, createdAt)
+    VALUES (?, ?, ?, ?, NOW())
+  `
+
+  db.query(sql, [userId, produkId, rating, komentar], (err, result) => {
+    if (err) {
+      console.error("DB error:", err);
+      return res.status(500).json({ error: "Failed to create review" });
+    }
+
+    res.json(result);
+  })
+})
+
+app.delete("/review/delete", (req, res) => {
+  const { produkId, userId } = req.body;
+
+  const sql = `
+    DELETE FROM review
+    WHERE review.produkId = ? AND review.userId = ?
+  `
+  db.query(sql, [produkId, userId], (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ success: true });
+  });
+})
+
+// FAVORITE ITEM
+app.post("/favorite/update", (req, res) => {
+  const { produkId, userId } = req.body;
+
+  const sql = `
+    INSERT INTO favorite (userId, produkId, createdAt)
+    VALUES (?, ?, NOW())
+  `
+
+  db.query(sql, [userId, produkId], (err, result) => {
+    if (err) {
+      console.error("DB error:", err);
+      return res.status(500).json({ error: "Failed to favorite" });
+    }
+
+    res.json(result);
+  })
+})
+
+app.delete("/favorite/delete", (req, res) => {
+  const { produkId, userId } = req.body;
+
+  const sql = `
+    DELETE FROM favorite
+    WHERE favorite.produkId = ? AND favorite.userId = ?
+  `
+  db.query(sql, [produkId, userId], (err) => {
+    if (err) return res.status(500).json(err);
+    res.json({ success: true });
+  });
+})
+// --------------
+
+// === CART PAGE ===
 app.get("/cart/items/:cartId", (req, res) => {
   const { cartId } = req.params;
 
@@ -341,8 +479,9 @@ app.delete("/cart/item/remove/:cartItemId", (req, res) => {
     res.json({ success: true });
   });
 });
+// --------------
 
-//TRANSACTION
+// === TRANSACTION/CHECKOUT PAGE ===
 app.post("/checkout", (req, res) => {
   const { userId, method, address } = req.body;
 
@@ -430,8 +569,9 @@ app.post("/checkout", (req, res) => {
       });
   });
 });
+// --------------
 
-// TRANSACTION HISTORY PAGE
+// === TRANSACTION HISTORY PAGE ===
 app.get('/transaction-history/:userId', (req, res) => {
   const userId = req.params.userId;
 
@@ -512,8 +652,10 @@ app.get('/transaction-history/:userId/:orderId', (req, res) => {
     return res.json(data);
   });
 });
+// --------------
 
-// PROGRESS PAGE
+
+// === PROGRESS PAGE ===
 app.get('/progress/:userId/:orderId', (req, res) => {
   const { userId, orderId } = req.params;
 
@@ -545,3 +687,4 @@ app.get('/progress/:userId/:orderId', (req, res) => {
       res.json(result);
   });
 });
+// --------------
