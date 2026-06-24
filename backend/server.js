@@ -4,7 +4,6 @@ const db = require("./db");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
-const { type } = require("os");
 
 app.use(cors());
 
@@ -14,7 +13,83 @@ app.get("/", (req, res) => {
   res.send("Backend berjalan!");
 });
 
-app.listen(3001, "0.0.0.0", () => {
+//menambahkan kode dari Gemini --> 1. Menambahkan API Baru (Wishlist, Review, Status, Analytics)
+
+// ==========================================
+// TAHAP 2: API BARU (MINGGU 3, 4, & 5)
+// ==========================================
+
+// 1. API WISHLIST (Tambah, Ambil, Hapus)
+app.post('/wishlist', (req, res) => {
+    const { userId, produkId } = req.body;
+    const sql = "INSERT INTO wishlist (userId, produkId) VALUES (?, ?)";
+    db.query(sql, [userId, produkId], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Produk berhasil ditambahkan ke wishlist!" });
+    });
+});
+
+app.get('/wishlist/:userId', (req, res) => {
+    const { userId } = req.params;
+    // Mengambil data produk yang ada di wishlist user
+    const sql = "SELECT w.id as wishlistId, p.* FROM wishlist w JOIN produk p ON w.produkId = p.produkId WHERE w.userId = ?";
+    db.query(sql, [userId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+
+app.delete('/wishlist/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = "DELETE FROM wishlist WHERE id = ?";
+    db.query(sql, [id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Produk dihapus dari wishlist!" });
+    });
+});
+
+// 2. API REVIEWS
+app.post('/reviews', (req, res) => {
+    const { userId, produkId, rating, comment } = req.body;
+    const sql = "INSERT INTO reviews (userId, produkId, rating, comment) VALUES (?, ?, ?, ?)";
+    db.query(sql, [userId, produkId, rating, comment], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Review berhasil dikirim!" });
+    });
+});
+
+// 3. API UPDATE STATUS PESANAN (Untuk Admin)
+app.put('/order-status/:id', (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body; // Placed, Processing, Shipping, Delivered
+    const sql = "UPDATE `order` SET status = ? WHERE orderId = ?"; // Pastikan primary key tabel ordermu adalah orderId
+    db.query(sql, [status, id], (err, result) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Status pengiriman berhasil diperbarui!" });
+    });
+});
+
+// 4. API ANALYTICS (Untuk Dashboard Admin)
+app.get('/admin/analytics', (req, res) => {
+    const sql = `
+        SELECT 
+            COUNT(orderId) as totalOrders,
+            SUM(totalAmount) as totalRevenue,
+            (SELECT COUNT(orderId) FROM \`order\` WHERE status != 'Delivered') as activeOrders
+        FROM \`order\`
+    `;
+    db.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results[0]); // Mengirimkan objek data tunggal
+    });
+});
+
+// ==========================================
+// BATAS AKHIR API BARU
+// ==========================================
+
+
+app.listen(3001, () => {
     console.log("Server berjalan di port 3001");
 });
 
@@ -483,9 +558,9 @@ app.delete("/cart/item/remove/:cartItemId", (req, res) => {
 
 // === TRANSACTION/CHECKOUT PAGE ===
 app.post("/checkout", (req, res) => {
+  console.log("DEBUG: Checkout diterima:", req.body);
   const { userId, method, address } = req.body;
 
-  // 1. Ambil cartId
   const getCartSql = "SELECT cartId FROM keranjang WHERE userId = ? LIMIT 1";
 
   db.query(getCartSql, [userId], (err, cartResult) => {
@@ -494,7 +569,6 @@ app.post("/checkout", (req, res) => {
 
       const cartId = cartResult[0].cartId;
 
-      // 2. Ambil isi cart
       const getItemsSql = `
           SELECT ci.*, p.harga 
           FROM keranjang_item ci
@@ -506,62 +580,47 @@ app.post("/checkout", (req, res) => {
           if (err2) return res.status(500).json(err2);
           if (items.length === 0) return res.status(400).json({ error: "Cart empty" });
 
-          // Hitung total
-          const totalAmount = items.reduce((sum, i) => sum + i.quantity * i.harga, 0);
+          const subtotal = items.reduce((sum, i) => sum + i.quantity * i.harga, 0);
+          const pajak = subtotal * 0.11;
+          const ongkir = 10000;
+          const totalAmount = subtotal + pajak + ongkir; 
 
-          // 3. Insert ke ORDER
+          // 🛠️ PERBAIKAN: Mengubah 'orderStatus' menjadi 'status' sesuai database kita
           const insertOrderSql = `
-              INSERT INTO \`order\` (userId, totalAmount, address, orderStatus, createdAt)
-              VALUES (?, ?, ?, 'PLACED', NOW())
+              INSERT INTO \`order\` (userId, totalAmount, address, status, createdAt)
+              VALUES (?, ?, ?, 'Placed', NOW())
           `;
 
           db.query(insertOrderSql, [userId, totalAmount, address], (err3, orderResult) => {
-              if (err3) return res.status(500).json(err3);
+              if (err3) {
+                  console.error("ERROR INSERT ORDER:", err3); // 👈 Ini akan muncul di terminal jika gagal
+                  return res.status(500).json(err3);
+              }
 
               const orderId = orderResult.insertId;
 
-              // 4. Insert banyak item ke order_item
               const orderItemsValues = items.map(i => [
-                  orderId,
-                  i.produkId,
-                  i.quantity,
-                  i.harga,
-                  i.quantity * i.harga
+                  orderId, i.produkId, i.quantity, i.harga, i.quantity * i.harga
               ]);
 
-              const insertOrderItemsSql = `
-                  INSERT INTO order_item (orderId, produkId, quantity, harga, subtotal)
-                  VALUES ?
-              `;
+              const insertOrderItemsSql = "INSERT INTO order_item (orderId, produkId, quantity, harga, subtotal) VALUES ?";
 
               db.query(insertOrderItemsSql, [orderItemsValues], (err4) => {
-                  if (err4) return res.status(500).json(err4);
+                  if (err4) {
+                      console.error("ERROR INSERT ITEMS:", err4);
+                      return res.status(500).json(err4);
+                  }
 
-                  // 5. Insert ke pembayaran
-                  const insertPaymentSql = `
-                    INSERT INTO pembayaran (orderId, method, paymentStatus, paymentDate)
-                    VALUES (?, ?, 'PAYED', NOW())
-                  `;
-
+                  const insertPaymentSql = "INSERT INTO pembayaran (orderId, method, paymentStatus, paymentDate) VALUES (?, ?, 'PAYED', NOW())";
                   db.query(insertPaymentSql, [orderId, method], (err5) => {
-                    if (err5) return res.status(500).json(err5);
+                    if (err5) console.error("ERROR INSERT PAYMENT:", err5);
 
-                    const insertDeliverySql = `
-                      INSERT INTO pengantaran (orderId, deliveryStatus, deliveryDate)
-                      VALUES (?, 'PLACED', NOW())
-                    `;
-
+                    const insertDeliverySql = "INSERT INTO pengantaran (orderId, deliveryStatus, deliveryDate) VALUES (?, 'Placed', NOW())";
                     db.query(insertDeliverySql, [orderId], (err6) => {
-                      if (err6) {console.error("Delivery insert failed", err6);}
+                      if (err6) console.error("ERROR INSERT DELIVERY:", err6);
 
-                      // 6. Hapus cart item
                       db.query("DELETE FROM keranjang_item WHERE cartId = ?", [cartId]);
-
-                      res.json({
-                        message: "Checkout success",
-                        orderId,
-                        totalAmount
-                      });
+                      res.json({ message: "Checkout success", orderId, totalAmount });
                     });
                   });
               });
@@ -619,7 +678,7 @@ app.get('/transaction-history/:userId', (req, res) => {
     params = [userId];
   }
   
-  db.query(sql, [userId], (err, data) => {
+  db.query(sql, params, (err, data) => {
     if (err) {
         console.error("Database query error for transaction history:", err);
         return res.status(500).json({ error: "Database query error" });
@@ -630,7 +689,7 @@ app.get('/transaction-history/:userId', (req, res) => {
 });
 
 app.get('/transaction-history/:userId/:orderId', (req, res) => {
-  const { userId, orderId } = req.params;
+  const { orderId } = req.params;
 
   const sql = `
         SELECT 

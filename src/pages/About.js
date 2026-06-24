@@ -6,14 +6,12 @@ import _1 from '../assets/desc-logo1.webp';
 import _2 from '../assets/desc-logo2.webp';
 import _3 from '../assets/desc-logo3.webp';
 import exploreImg from '../assets/hellofreshimage 4-cropped.png';
-import { useAuth } from '../context/AuthContext';
 
 function About() {
-    const { user } = useAuth();
     return (
         <div class="about-body">
             <div class="banner">
-                <img class="banner-img" src={aboutBanner}/>
+                <img class="banner-img" src={aboutBanner} alt=""/>
                 <h1 class="banner-text">Freshly</h1>
             </div>
             <div class="about-sections about-desc">
@@ -24,17 +22,17 @@ function About() {
                 <h1>What we bring to your table</h1>
                 <div class="adv-card-wrapper">
                     <div class="adv-card">
-                        <img src={_1}/>
+                        <img src={_1} alt=""/>
                         <p class="bolded-text">Fresh Ingredients</p>
                         <p>Guaranteed fresh from the fram to your doorstep.</p>
                     </div>
                     <div class="adv-card">
-                        <img src={_2}/>
+                        <img src={_2} alt=""/>
                         <p class="bolded-text">Sustainable Solutions</p>
                         <p>Reducing food waste and CO2 emissions.</p>
                     </div>
                     <div class="adv-card">
-                        <img src={_3}/>
+                        <img src={_3} alt="" />
                         <p class="bolded-text">Meaningful Recipes</p>
                         <p>Affordable, time-saving homemade meals.</p>
                     </div>
@@ -45,7 +43,7 @@ function About() {
                 <h1>~ Kelompok 6 ~</h1>
                 <div class="person-card">
                     <div class="person-card-img">
-                        <img src={logo}/>
+                        <img src={logo} alt=""/>
                     </div>
                     <div class="person-card-details">
                         <h1>Ahmad Hanif Naufal Jamil</h1>
@@ -54,7 +52,7 @@ function About() {
                 </div>
                 <div class="person-card" style={{flexDirection: "row-reverse"}}>
                     <div class="person-card-img">
-                        <img src={logo}/>
+                        <img src={logo} alt=""/>
                     </div>
                     <div class="person-card-details">
                         <h1>Rizky Wulan Purnamasari</h1>
@@ -63,7 +61,7 @@ function About() {
                 </div>
                 <div class="person-card">
                     <div class="person-card-img">
-                        <img src={logo}/>
+                        <img src={logo} alt=""/>
                     </div>
                     <div class="person-card-details">
                         <h1>Bara Juang Indonesiano</h1>
@@ -76,7 +74,7 @@ function About() {
                     <h1>Browse for today's meal!</h1>
                     <a class="bolded-text" href="/store">Explore</a>
                 </div>
-                <img class="explore-img" src={exploreImg}/>
+                <img class="explore-img" src={exploreImg} alt=""/>
             </div>
             {/* <h2>About AC Store</h2>
             <p>ACPowered (Alternate Current Store) is a digital store dedicated to delivering the best video game titles to gamers worldwide.</p>

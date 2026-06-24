@@ -24,7 +24,7 @@ function Cart() {
           .then(data => {
             setCartId(data.cartId); 
           });
-      }, []);
+      }, [user, navigate]); // <--- Tambahkan user dan navigate di sini
 
     useEffect(() => {
         if (!cartId) return;
@@ -140,13 +140,19 @@ function Cart() {
                     </Link>
                 </div>
 
-                {/* SUBTOTAL */}
+                {/* SUBTOTAL & SINKRONISASI PAJAK */}
                 <div className="cart-summary">
                     <h2>Order Summary</h2>
 
                     <div className="summary-row">
                         <span>Subtotal</span>
                         <span>Rp {subtotal.toLocaleString()}</span>
+                    </div>
+
+                    {/* 🛠️ MENAMPILKAN PAJAK 11% SESUAI TARGET MINGGU 4 */}
+                    <div className="summary-row">
+                        <span>Tax (11%)</span>
+                        <span>Rp {(subtotal * 0.11).toLocaleString()}</span>
                     </div>
 
                     <div className="summary-row">
@@ -156,7 +162,8 @@ function Cart() {
 
                     <div className="summary-total">
                         <span>Total</span>
-                        <span>Rp {(subtotal + 10000).toLocaleString()}</span>
+                        {/* Total akhir dihitung akumulatif dengan Pajak + Ongkir */}
+                        <span>Rp {(subtotal + (subtotal * 0.11) + 10000).toLocaleString()}</span>
                     </div>
 
                     <Link to="/transaction">

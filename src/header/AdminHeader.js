@@ -3,35 +3,34 @@ import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logo_no_bg.png';
 import './Header.css';
 
-function Header() {
-  const { user, logout } = useAuth();
+function AdminHeader() { // Mengubah nama fungsi agar sesuai nama file
+  const { logout } = useAuth();
   const navigate = useNavigate();
-  
-  console.log(user);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
-    return (
-      <header>
-        <div className="nav-container">
-          <nav className="main-links">
-            <ul className="nav-list">
-              <li><a href="/"><img class="logo-img" src={logo} alt="Freshly Logo"/></a></li>
-              <li><a href="/">Admin Dashboard</a></li>
-              <li><a href="/transaction-history/0">Transaction History</a></li>
-            </ul>
-          </nav>
 
-          <div className="account-info">
-            <button class="header-button">View Analytics</button>
-            <button onClick={handleLogout} class="logout header-button">Logout</button>
-          </div>
-          
+  return (
+    <header>
+      <div className="nav-container">
+        <nav className="main-links">
+          <ul className="nav-list">
+            <li><Link to="/"><img className="logo-img" src={logo} alt="Freshly Logo"/></Link></li>
+            <li><Link to="/">Admin Dashboard</Link></li>
+            {/* 🛠️ PERBAIKAN: Mengarahkan ID transaksi ke ID 2 (ID Admin asli kalian) */}
+            <li><Link to="/transaction-history/2">Transaction History</Link></li>
+          </ul>
+        </nav>
+
+        <div className="account-info">
+          <button className="header-button">View Analytics</button>
+          <button onClick={handleLogout} className="logout header-button">Logout</button>
         </div>
-      </header>
-    );
+      </div>
+    </header>
+  );
 }
 
-export default Header
+export default AdminHeader; // Pastikan export default-nya sama

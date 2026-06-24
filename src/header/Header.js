@@ -17,27 +17,27 @@ function Header() {
   
     return (
       <header>
-        <div class="nav-container">
-          <nav class="main-links">
-            <ul class="nav-list">
-              <li><a href="/"><img class="logo-img" src={logo} alt="Freshly Logo"/></a></li>
-              <li><a href="/store">Store</a></li>
-              <li><a href="/about">About</a></li>
+        <div className="nav-container">
+          <nav className="main-links">
+            <ul className="nav-list">
+              {/* Mengubah tag <a> menjadi <Link to="..."> */}
+              <li><Link to="/"><img className="logo-img" src={logo} alt="Freshly Logo"/></Link></li>
+              <li><Link to="/store">Store</Link></li>
+              <li><Link to="/about">About</Link></li>
             </ul>
           </nav>
 
-          <div class="account-info">
+          <div className="account-info">
             { user ? (
               <>
-                <button class="cart header-button"><Link to="/cart">Cart</Link></button>
-                <button class="cart header-button"><Link to={`/transaction-history/${user.userId}`}>History</Link></button>
-                <button onClick={handleLogout} class="logout header-button">Logout</button>
+                <button className="cart header-button"><Link to="/cart">Cart</Link></button>
+                <button className="cart header-button"><Link to={`/transaction-history/${user.userId}`}>History</Link></button>
+                <button onClick={handleLogout} className="logout header-button">Logout</button>
               </>
             ) : (
-              <Link to="/login" class="login header-button">Login</Link>
+              <Link to="/login" className="login header-button">Login</Link>
             )}
           </div>
-          
         </div>
       </header>
     );
