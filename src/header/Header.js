@@ -30,8 +30,11 @@ function Header() {
           <div className="account-info">
             { user ? (
               <>
+                {/* 🛠️ TOMBOL WISHLIST DITAMBAHKAN DI SINI */}
+                <button className="cart header-button"><Link to="/wishlist">Wishlist</Link></button>
+                
                 <button className="cart header-button"><Link to="/cart">Cart</Link></button>
-                <button className="cart header-button"><Link to={`/transaction-history/${user.userId}`}>History</Link></button>
+                <button className="cart header-button"><Link to={`/transaction-history/${user.user_id || user.userId}`}>History</Link></button>
                 <button onClick={handleLogout} className="logout header-button">Logout</button>
               </>
             ) : (

@@ -17,6 +17,9 @@ import Transaction from './pages/Transaction.js';
 import Progress from './pages/Progress.js';
 import TransactionHistory from './pages/TransactionHistory.js';
 import Admin from './pages/Admin.js';
+// 🛠️ 1. IMPORT HALAMAN WISHLIST-MU DI SINI
+// (Pastikan nama filenya benar, apakah Wishlist.js atau Wishlists.js)
+import Wishlist from './pages/Wishlists.js'; 
 // import Details from './pages/Details.js';
 // ------------ ~
 
@@ -63,6 +66,9 @@ function App() {
             <Route path={`/progress/:userId/:orderId`} element={<><DynamicHeader /><Progress /><Footer /></>} />
             <Route path="/transaction" element={<><DynamicHeader /><Transaction /><Footer /></>} />
             <Route path={"/transaction-history/:userId"} element={<><DynamicHeader /><TransactionHistory /><Footer /></>} />
+            
+            {/* 🛠️ 2. DAFTARKAN RUTE WISHLIST DI SINI */}
+            <Route path="/wishlist" element={<><DynamicHeader /><Wishlist /><Footer /></>} />
           </Routes>
         
         </div>

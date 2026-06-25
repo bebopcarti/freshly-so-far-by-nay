@@ -6,81 +6,88 @@ import qrisCode from "../assets/qris.jpg";
 
 function Transaction() {
     const navigate = useNavigate();
-    const [method, setMethod] = useState("card");
+    const { user } = useAuth();
 
+    const [method, setMethod] = useState("card");
     const [cardName, setCardName] = useState("");
     const [cardNumber, setCardNumber] = useState("");
     const [expDate, setExpDate] = useState("");
     const [cvv, setCvv] = useState("");
-
     const [address, setAddress] = useState("");
-
     const [showQR, setShowQR] = useState(false);
 
     const [cartItems, setCartItems] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
 
-    const { user } = useAuth();
-
     useEffect(() => {
-        if (!user) return;
-    
-        // Ambil cartId user
-        fetch("http://localhost:3001/cart/getOrCreate", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: user.userId })
-        })
-        .then(res => res.json())
-        .then(data => {
-            const cartId = data.cartId;
-    
-            // Fetch item cart
-            fetch(`http://localhost:3001/cart/items/${cartId}`)
-                .then(res => res.json())
-                .then(items => {
+        if (!user) {
+            navigate('/');
+            return;
+        }
+        
+        // Antisipasi ID format baru/lama
+        const currentUserId = user.user_id || user.userId;
+
+        // 🛠️ LANGSUNG TEMBAK KE API BARU, SAMA SEPERTI CART.JS
+        fetch(`http://localhost:3001/cart/${currentUserId}`)
+            .then(res => res.json())
+            .then(items => {
+                if (Array.isArray(items)) {
                     setCartItems(items);
-    
-                    const total = items.reduce((sum, item) => sum + item.subtotal, 0);
+                    const total = items.reduce((sum, item) => sum + Number(item.subtotal), 0);
                     setSubtotal(total);
-                });
-        });
-    }, [user]);
+                } else {
+                    setCartItems([]);
+                }
+            })
+            .catch(err => console.error("Error fetching cart for checkout:", err));
+    }, [user, navigate]);
 
     const handleCheckout = () => {
+        // 🚨 PENCEGAHAN: Jangan biarkan checkout kalau alamat kosong!
+        if (!address.trim()) {
+            alert("Please enter your delivery address first!");
+            return;
+        }
+
+        const currentUserId = user.user_id || user.userId;
+
         fetch("http://localhost:3001/checkout", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                userId: user.userId,
-                method,
-                address,
-                deliveryFee: 10000,
-                totalAmount: subtotal + 10000
+                userId: currentUserId,
+                address: address
             })
         })
         .then(res => res.json())
         .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
             if (method === "qris") {
                 setShowQR(true);
             } else {
-                navigate(`/transaction-history/${user.userId}`);
+                navigate(`/transaction-history/${currentUserId}`);
             }
+        })
+        .catch(err => {
+            console.error("Checkout failed:", err);
+            alert("Something went wrong during checkout.");
         });
     };
 
-    useEffect(() => {
-        if (!user) {
-            navigate('/');
-        };
-    }, [user, navigate]);
-
+    // 🛠️ KALKULASI TOTAL YANG BENAR (SESUAI CART)
+    const tax = subtotal * 0.11;
+    const deliveryFee = 10000;
+    const grandTotal = subtotal + tax + deliveryFee;
 
     return (
         <div className="transaction-container">
             
             <div className="payment-section">
-
                 <h2 className="section-title">Payment Method</h2>
 
                 <div className="steam-tabs">
@@ -90,14 +97,12 @@ function Transaction() {
                     >
                         Credit / Debit Card
                     </div>
-
                     <div
                         className={`steam-tab ${method === "qris" ? "active" : ""}`}
                         onClick={() => setMethod("qris")}
                     >
                         QRIS
                     </div>
-
                     <div
                         className={`steam-tab ${method === "cod" ? "active" : ""}`}
                         onClick={() => setMethod("cod")}
@@ -107,7 +112,6 @@ function Transaction() {
                 </div>
 
                 <div className="payment-box">
-
                     {method === "card" && (
                         <>
                             <label>Cardholder Name</label>
@@ -163,27 +167,29 @@ function Transaction() {
                             Your order will be paid upon delivery.
                         </p>
                     )}
-
                 </div>
-
             </div>
 
             <div className="order-summary">
-
                 <h2 className="section-title">Order Summary</h2>
 
                 {cartItems.map(item => (
-                    <div className="order-item" key={item.cartItemId}>
+                    <div className="order-item" key={item.cartItemId || Math.random()}>
                         <p><strong>{item.nama}</strong></p>
                         <p>Quantity: {item.quantity}</p>
-                        <p>Price: IDR {item.harga.toLocaleString()}</p>
-                        <p>Subtotal: IDR {item.subtotal.toLocaleString()}</p>
+                        {/* 🛠️ Memaksa Number() agar tidak crash */}
+                        <p>Price: IDR {item.harga ? Number(item.harga).toLocaleString() : 0}</p>
+                        <p>Subtotal: IDR {item.subtotal ? Number(item.subtotal).toLocaleString() : 0}</p>
                     </div>
                 ))}
 
                 <div className="summary-box">
-                    <p><strong>Delivery Fee:</strong> IDR 10000</p>
-                    <p><strong>Total:</strong> IDR {(subtotal + 10000).toLocaleString()}</p>
+                    <p><strong>Subtotal:</strong> IDR {subtotal.toLocaleString()}</p>
+                    <p><strong>Tax (11%):</strong> IDR {tax.toLocaleString()}</p>
+                    <p><strong>Delivery Fee:</strong> IDR {deliveryFee.toLocaleString()}</p>
+                    <p style={{fontSize: '18px', marginTop: '10px', color: '#386641'}}>
+                        <strong>Total: IDR {grandTotal.toLocaleString()}</strong>
+                    </p>
                 </div>
 
                 <h3>Delivery Address</h3>
@@ -200,7 +206,6 @@ function Transaction() {
                 >
                     Checkout
                 </button>
-
             </div>
 
             {showQR && (
@@ -210,14 +215,16 @@ function Transaction() {
                         <img src={qrisCode} alt="QRIS Code" className="qr-image" />
                         <button 
                             className="close-btn"
-                            onClick={() => navigate(`/transaction-history/${user.userId}`)}
+                            onClick={() => {
+                                const currentUserId = user.user_id || user.userId;
+                                navigate(`/transaction-history/${currentUserId}`);
+                            }}
                         >
                             Continue
                         </button>
                     </div>
                 </div>
             )}
-
         </div>
     );
 }
